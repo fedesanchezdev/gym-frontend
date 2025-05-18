@@ -18,23 +18,17 @@
         </div>
 
         <section class="seccion-agregar">
-            <h2>Agregar Ejercicio</h2>
+            <h2>Administrar Ejercicios</h2>
             <button id="btn-ir-agregar"
                 style="margin:12px 0 18px 0; background:#1976d2; color:#fff; border:none; padding:8px 20px; border-radius:6px; font-size:1em; cursor:pointer;">
                 ➕ Ir a Agregar Ejercicio
             </button>
-            <div class="controles-agregar">
-                <select id="selector_ejercicios">
-                    <option value="">Cargando ejercicios...</option>
-                </select>
-                <button id="agregar_ejercicio">Agregar a Rutina</button>
-            </div>
         </section>
     </header>
 
     <main>
         <section class="seccion-agregar">
-            <h2>Agregar Ejercicio</h2>
+            <h2>Agregar a Rutina de Hoy</h2>
             <div class="controles-agregar">
                 <select id="selector_ejercicios">
                     <option value="">Cargando ejercicios...</option>
@@ -61,30 +55,13 @@
     <script>
         // Calcular la fecha actual en UTC-3 de forma robusta
         const now = new Date();
-        // Hora UTC en milisegundos menos 3 horas
         const utc3 = new Date(now.getTime() - (3 * 60 * 60 * 1000));
-        // Mostrar solo la parte de la fecha (no la hora)
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         document.getElementById('fecha_actual').textContent = utc3.toLocaleDateString('es-ES', options);
-    </script>
-    <script>
+
+        // Botón solo redirige, la protección está en agregar-ejercicio.html
         document.getElementById('btn-ir-agregar').addEventListener('click', function () {
-            const pass = prompt('Ingrese la contraseña para acceder:');
-            if (pass === null) return;
-            fetch('https://gym-backend-oasf.onrender.com/validar-clave', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ clave: pass })
-            })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.acceso) {
-                        window.location.href = 'agregar-ejercicio.html';
-                    } else {
-                        alert('Contraseña incorrecta');
-                    }
-                })
-                .catch(() => alert('Error de conexión con el backend'));
+            window.location.href = 'agregar-ejercicio.html';
         });
     </script>
 </body>
