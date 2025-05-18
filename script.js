@@ -142,10 +142,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 seriesNuevas.push(partes.join(' '));
             });
 
+            const fechaInput = cardEjercicio.querySelector('.fecha-ejercicio');
+            const fechaSeleccionada = fechaInput ? fechaInput.value : undefined;
+
             fetch(`${API_URL}/ejercicios/serie`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ rutina_id: rutinaId, series: seriesNuevas.join('\n') })
+                body: JSON.stringify({
+                    rutina_id: rutinaId,
+                    series: seriesNuevas.join('\n'),
+                    fecha: fechaSeleccionada // <-- ahora se envía la fecha elegida
+                })
             })
                 .then(res => res.json())
                 .then(result => {
