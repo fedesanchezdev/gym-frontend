@@ -1,3 +1,5 @@
+const API_URL = 'https://gym-backend-oasf.onrender.com';
+
 function toggleHistorialModal(ejercicioId) {
     const modal = document.getElementById('modalHistorial');
     if (modal) {
@@ -13,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const contenedorRutina = document.getElementById('rutina_hoy');
 
     function cargarEjercicios() {
-        fetch('/ejercicios')
+        fetch(`${API_URL}/ejercicios`)
             .then(response => response.json())
             .then(ejercicios => {
                 selectorEjercicios.innerHTML = '';
@@ -24,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 ejercicios.forEach(ejercicio => {
                     const option = document.createElement('option');
-                    option.value = ejercicio.id;
+                    option.value = ejercicio._id; // MongoDB usa _id
                     option.textContent = `${ejercicio.codigo} - ${ejercicio.grupo_muscular} - ${ejercicio.nombre}`;
                     selectorEjercicios.appendChild(option);
                 });
@@ -32,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function cargarRutinaHoy() {
-        fetch('/rutina_hoy')
+        fetch(`${API_URL}/rutina_hoy`)
             .then(response => response.json())
             .then(rutina => {
                 contenedorRutina.innerHTML = '';
@@ -89,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <div class="acciones-ejercicio" style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;">
         <div>
             <button class="guardar-todas-series" style="background:#ccc;color:#333;" data-id="${ejercicio.rutina_id}">Guardar</button>
-            <button class="ver-historial" data-id="${ejercicio.id}">📈 Historial</button>
+            <button class="ver-historial" data-id="${ejercicio._id}">📈 Historial</button>
         </div>
         <button class="eliminar-ejercicio" data-id="${ejercicio.rutina_id}" style="background:#f44336;color:#fff;">Eliminar</button>
     </div>
@@ -102,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const ejercicioId = selectorEjercicios.value;
         if (!ejercicioId) return;
 
-        fetch('/rutina_hoy', {
+        fetch(`${API_URL}/rutina_hoy`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ ejercicio_id: ejercicioId })
@@ -118,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Eliminar ejercicio de la rutina
         if (e.target.classList.contains('eliminar-ejercicio')) {
             const rutinaId = e.target.dataset.id;
-            fetch(`/rutina_hoy/${rutinaId}`, { method: 'DELETE' })
+            fetch(`${API_URL}/rutina_hoy/${rutinaId}`, { method: 'DELETE' })
                 .then(() => cargarRutinaHoy());
         }
 
@@ -140,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 seriesNuevas.push(partes.join(' '));
             });
 
-            fetch('/ejercicios/serie', {
+            fetch(`${API_URL}/ejercicios/serie`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ rutina_id: rutinaId, series: seriesNuevas.join('\n') })

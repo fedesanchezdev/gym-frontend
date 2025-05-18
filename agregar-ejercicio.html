@@ -68,6 +68,8 @@
     <div id="lista-ejercicios"></div>
 
     <script>
+        const API_URL = 'https://gym-backend-oasf.onrender.com';
+
         const tipoSelect = document.getElementById('tipo');
         const seriesFields = document.getElementById('series-fields');
         const seriesTextarea = document.getElementById('series');
@@ -153,7 +155,7 @@
                 tipo: form.tipo.value
             };
 
-            fetch('http://localhost:3000/ejercicios', {
+            fetch(`${API_URL}/ejercicios`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
@@ -176,7 +178,7 @@
 
         // Mostrar la lista de ejercicios y permitir eliminarlos y borrar historial
         function cargarListaEjercicios() {
-            fetch('http://localhost:3000/ejercicios')
+            fetch(`${API_URL}/ejercicios`)
                 .then(res => res.json())
                 .then(ejercicios => {
                     const lista = document.getElementById('lista-ejercicios');
@@ -186,8 +188,8 @@
                         div.className = 'ejercicio-item';
                         div.innerHTML = `
                             <span><strong>${ej.codigo}</strong> - ${ej.nombre} (${ej.grupo_muscular})</span>
-                            <button data-id="${ej.id}" class="eliminar-ejercicio">Eliminar</button>
-                            <button data-id="${ej.id}" class="borrar-historial">Borrar historial</button>
+                            <button data-id="${ej._id}" class="eliminar-ejercicio">Eliminar</button>
+                            <button data-id="${ej._id}" class="borrar-historial">Borrar historial</button>
                         `;
                         lista.appendChild(div);
                     });
@@ -198,7 +200,7 @@
             if (e.target.classList.contains('eliminar-ejercicio')) {
                 const id = e.target.getAttribute('data-id');
                 if (confirm('¿Seguro que quieres eliminar este ejercicio?')) {
-                    fetch(`http://localhost:3000/ejercicios/${id}`, {
+                    fetch(`${API_URL}/ejercicios/${id}`, {
                         method: 'DELETE'
                     })
                         .then(res => res.json())
@@ -216,7 +218,7 @@
             if (e.target.classList.contains('borrar-historial')) {
                 const id = e.target.getAttribute('data-id');
                 if (confirm('¿Seguro que quieres borrar el historial de este ejercicio?')) {
-                    fetch(`http://localhost:3000/historial/${id}`, {
+                    fetch(`${API_URL}/historial/${id}`, {
                         method: 'DELETE'
                     })
                         .then(res => res.json())

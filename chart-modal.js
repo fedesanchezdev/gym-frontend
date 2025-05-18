@@ -40,7 +40,7 @@ function crearHistorialEnCard(card, mensaje, tipo = 'peso', onTipoChange) {
 }
 
 function mostrarGraficoHistorialEnCard(ejercicioId, card, tipo = 'peso') {
-    fetch(`/historial/${ejercicioId}`)
+    fetch(`${API_URL}/historial/${ejercicioId}`)
         .then(res => res.json())
         .then(data => {
             if (!data.length) {
