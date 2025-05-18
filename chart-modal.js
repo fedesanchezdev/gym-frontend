@@ -52,6 +52,24 @@ function mostrarGraficoHistorialEnCard(ejercicioId, card, tipo = 'peso') {
                 mostrarGraficoHistorialEnCard(ejercicioId, card, nuevoTipo);
             });
 
+            // --- NUEVO: Lista de historial con botón eliminar ---
+            const lista = document.createElement('ul');
+            lista.style.listStyle = 'none';
+            lista.style.padding = '0';
+            data.forEach(item => {
+                const li = document.createElement('li');
+                li.style.marginBottom = '8px';
+                li.innerHTML = `
+                    <strong>${item.fecha}</strong>
+                    <button class="eliminar-entrada-historial" data-id="${item._id}" style="margin-left:10px;background:#f44336;color:#fff;border:none;padding:2px 10px;border-radius:4px;cursor:pointer;">Eliminar</button>
+                    <br>
+                    <pre style="background:#f7f7f7;padding:4px 8px;border-radius:4px;">${item.series_string}</pre>
+                `;
+                lista.appendChild(li);
+            });
+            contenedor.appendChild(lista);
+            // --- FIN NUEVO ---
+
             const ctx = contenedor.querySelector('.chartHistorialEnCard').getContext('2d');
             const fechas = data.map(item => item.fecha);
             const seriesPorIndice = {};
@@ -92,3 +110,28 @@ function mostrarGraficoHistorialEnCard(ejercicioId, card, tipo = 'peso') {
             });
         });
 }
+
+document.addEventListener('click', function (e) {
+    if (e.target.classList.contains('eliminar-entrada-historial')) {
+        const id = e.target.getAttribute('data-id');
+        if (confirm('¿Seguro que quieres eliminar esta entrada del historial?')) {
+            fetch(`${API_URL}/historial/entrada/${id}`, { method: 'DELETE' })
+                .then(res => res.json())
+                .then(result => {
+                    if (result.success) {
+                        alert('Entrada eliminada');
+                        // Recarga el historial en la card correspondiente
+                        const card = e.target.closest('.ejercicio-card');
+                        const ejercicioId = card ? card.querySelector('.ver-historial').dataset.id : null;
+                        if (card && ejercicioId) {
+                            mostrarGraficoHistorialEnCard(ejercicioId, card);
+                        } else {
+                            location.reload();
+                        }
+                    } else {
+                        alert('Error al eliminar');
+                    }
+                });
+        }
+    }
+});
