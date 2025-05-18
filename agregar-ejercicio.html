@@ -266,7 +266,7 @@
             seriesList = [];
             seriesTextarea.value = '';
             if (tipoSelect.value === 'series_fijas') {
-                addSerieFields();
+                addSerieFields(); // Solo un campo al inicio
                 const addBtn = document.createElement('button');
                 addBtn.type = 'button';
                 addBtn.textContent = 'Agregar Serie';
@@ -298,13 +298,13 @@
             const div = document.createElement('div');
             div.className = 'serie-fields';
             div.innerHTML = `
-                <strong>Serie ${idx}:</strong>
-                <label>Reps: <input type="number" min="1" required></label>
-                <label>Fallo: <input type="number" min="0" required></label>
-                <label>Kg: <input type="number" min="0" step="0.1" required></label>
-                <label>Incremento: <input type="number" min="0" step="0.1" required></label>
-                <button type="button">Agregar</button>
-            `;
+        <strong>Serie ${idx}:</strong>
+        <label>Reps: <input type="number" min="1" required></label>
+        <label>Fallo: <input type="number" min="0" required></label>
+        <label>Kg: <input type="number" min="0" step="0.1" required></label>
+        <label>Incremento: <input type="number" min="0" step="0.1" required></label>
+        <button type="button">Agregar</button>
+    `;
             const btn = div.querySelector('button');
             btn.onclick = function () {
                 const inputs = div.querySelectorAll('input');
@@ -317,7 +317,7 @@
                     seriesList.push(linea);
                     seriesTextarea.value = seriesList.join('\n');
                     div.remove();
-                    addSerieFields(); // Siempre deja un campo para agregar otra serie
+                    // NO agregues automáticamente otra serie aquí
                 }
             };
             seriesFields.appendChild(div);
@@ -381,12 +381,12 @@
                         const div = document.createElement('div');
                         div.className = 'ejercicio-item';
                         div.innerHTML = `
-                            <span><strong>${ej.codigo}</strong> - ${ej.nombre} (${ej.grupo_muscular})</span>
-                            <span>
-                                <button data-id="${ej._id}" class="eliminar-ejercicio">Eliminar</button>
-                                <button data-id="${ej._id}" class="borrar-historial">Borrar historial</button>
-                            </span>
-                        `;
+        <span><strong>${ej.codigo}</strong> - ${ej.nombre} (${ej.grupo_muscular})</span>
+        <span>
+            <button data-id="${ej._id}" class="eliminar-ejercicio" title="Eliminar" style="background:#f44336;padding:4px 10px;font-size:1.2em;">❌</button>
+            <button data-id="${ej._id}" class="borrar-historial" title="Borrar historial" style="background:#1976d2;padding:4px 10px;font-size:1.2em;">⏱️</button>
+        </span>
+    `;
                         lista.appendChild(div);
                     });
                 });
