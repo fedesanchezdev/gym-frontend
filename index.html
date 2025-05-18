@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Rutina de Ejercicios</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- 📊 Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <header>
+        <h1>🏋️ Mi Rutina de Ejercicios</h1>
+        <div class="fecha-hoy">
+            <span id="fecha_actual"></span>
+        </div>
+    </header>
+
+    <main>
+        <section class="seccion-agregar">
+            <h2>Agregar Ejercicio</h2>
+            <div class="controles-agregar">
+                <select id="selector_ejercicios">
+                    <option value="">Cargando ejercicios...</option>
+                </select>
+                <button id="agregar_ejercicio">Agregar a Rutina</button>
+            </div>
+        </section>
+
+        <section class="seccion-rutina">
+            <h2>Rutina de Hoy</h2>
+            <div id="rutina_hoy" class="contenedor-rutina">
+                <p class="mensaje-vacio">No hay ejercicios en tu rutina hoy. ¡Agrega algunos!</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Sistema de Gestión de Rutinas v1.0</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+    <script src="chart-modal.js"></script>
+    <script>
+        // Calcular la fecha actual en UTC-3 de forma robusta
+        const now = new Date();
+        // Hora UTC en milisegundos menos 3 horas
+        const utc3 = new Date(now.getTime() - (3 * 60 * 60 * 1000));
+        // Mostrar solo la parte de la fecha (no la hora)
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('fecha_actual').textContent = utc3.toLocaleDateString('es-ES', options);
+    </script>
+</body>
+
+</html>

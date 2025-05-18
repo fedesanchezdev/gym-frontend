@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Agregar Ejercicio</title>
+    <style>
+        .serie-fields {
+            margin-bottom: 10px;
+        }
+
+        .serie-list {
+            font-family: monospace;
+            background: #f0f0f0;
+            padding: 5px;
+        }
+
+        #rt-fallos {
+            width: 200px;
+            font-size: 1.1em;
+        }
+
+        .ejercicio-item {
+            margin-bottom: 8px;
+        }
+
+        .ejercicio-item button {
+            margin-left: 6px;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Agregar Ejercicio</h2>
+    <form id="form-ejercicio">
+        <label>Código: <input type="text" name="codigo" required></label><br>
+        <label>Grupo muscular:
+            <select name="grupo_muscular" required>
+                <option value="">Selecciona...</option>
+                <option value="Pecho">Pecho</option>
+                <option value="Bíceps">Bíceps</option>
+                <option value="Piernas">Piernas</option>
+                <option value="Hombros">Hombros</option>
+                <option value="Tríceps">Tríceps</option>
+                <option value="Espalda">Espalda</option>
+                <option value="Abdómen">Abdómen</option>
+            </select>
+        </label><br>
+        <label>Nombre: <input type="text" name="nombre" required></label><br>
+        <label>Tipo:
+            <select name="tipo" id="tipo" required>
+                <option value="series_fijas">Series fijas</option>
+                <option value="repeticiones_totales">Repeticiones totales</option>
+            </select>
+        </label><br><br>
+
+        <div id="series-fields"></div>
+
+        <label>Series generadas:<br>
+            <textarea name="series" id="series" rows="4" cols="40" required readonly></textarea>
+        </label><br>
+        <button type="submit">Agregar</button>
+    </form>
+
+    <div id="resultado"></div>
+
+    <h3>Ejercicios cargados</h3>
+    <div id="lista-ejercicios"></div>
+
+    <script>
+        const tipoSelect = document.getElementById('tipo');
+        const seriesFields = document.getElementById('series-fields');
+        const seriesTextarea = document.getElementById('series');
+        let seriesList = [];
+
+        function renderSeriesFields() {
+            seriesFields.innerHTML = '';
+            seriesList = [];
+            seriesTextarea.value = '';
+            if (tipoSelect.value === 'series_fijas') {
+                addSerieFields();
+                const addBtn = document.createElement('button');
+                addBtn.type = 'button';
+                addBtn.textContent = 'Agregar Serie';
+                addBtn.onclick = addSerieFields;
+                seriesFields.appendChild(addBtn);
+            } else if (tipoSelect.value === 'repeticiones_totales') {
+                // Campos para repeticiones totales
+                seriesFields.innerHTML = `
+                    <div class="serie-fields">
+                        <label>Repeticiones totales: <input type="number" id="rt-reps" min="1" required></label><br>
+                        <label>Fallos (separados por guión): <input type="text" id="rt-fallos" placeholder="15-15-10-10" required></label><br>
+                        <label>Peso (kg): <input type="number" id="rt-kg" min="0" step="0.1" required></label><br>
+                        <label>Incremento (kg): <input type="number" id="rt-inc" min="0" step="0.1" required></label>
+                        <button type="button" onclick="agregarRepeticionesTotales()">Agregar</button>
+                    </div>
+                `;
+            }
+        }
+
+        function addSerieFields() {
+            const idx = seriesList.length + 1;
+            const div = document.createElement('div');
+            div.className = 'serie-fields';
+            div.innerHTML = `
+                <strong>Serie ${idx}:</strong>
+                <label>Reps: <input type="number" min="1" required></label>
+                <label>Fallo: <input type="number" min="0" required></label>
+                <label>Kg: <input type="number" min="0" step="0.1" required></label>
+                <label>Incremento: <input type="number" min="0" step="0.1" required></label>
+                <button type="button">Agregar</button>
+            `;
+            const btn = div.querySelector('button');
+            btn.onclick = function () {
+                const inputs = div.querySelectorAll('input');
+                const reps = inputs[0].value;
+                const fallo = inputs[1].value;
+                const kg = inputs[2].value;
+                const inc = inputs[3].value;
+                if (reps && fallo && kg && inc) {
+                    const linea = `S${idx} R${reps} F${fallo} K${kg} +${inc}`;
+                    seriesList.push(linea);
+                    seriesTextarea.value = seriesList.join('\n');
+                    div.remove();
+                }
+            };
+            seriesFields.appendChild(div);
+        }
+
+        window.agregarRepeticionesTotales = function () {
+            let reps = document.getElementById('rt-reps').value;
+            let fallos = document.getElementById('rt-fallos').value.trim();
+            // Elimina guiones al principio o final
+            fallos = fallos.replace(/^-+|-+$/g, '');
+            let kg = document.getElementById('rt-kg').value;
+            let inc = document.getElementById('rt-inc').value;
+            if (reps && fallos && kg && inc) {
+                seriesTextarea.value = `SN R${reps} F${fallos} K${kg} +${inc}`;
+            }
+        };
+
+        tipoSelect.addEventListener('change', renderSeriesFields);
+        renderSeriesFields();
+
+        document.getElementById('form-ejercicio').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const form = e.target;
+            const data = {
+                codigo: form.codigo.value,
+                grupo_muscular: form.grupo_muscular.value,
+                nombre: form.nombre.value,
+                series: form.series.value,
+                tipo: form.tipo.value
+            };
+
+            fetch('http://localhost:3000/ejercicios', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+                .then(res => res.json())
+                .then(result => {
+                    if (result.success) {
+                        document.getElementById('resultado').textContent = 'Ejercicio agregado correctamente.';
+                        form.reset();
+                        renderSeriesFields();
+                        setTimeout(cargarListaEjercicios, 500);
+                    } else {
+                        document.getElementById('resultado').textContent = 'Error: ' + (result.error || 'No se pudo agregar');
+                    }
+                })
+                .catch(err => {
+                    document.getElementById('resultado').textContent = 'Error de red: ' + err;
+                });
+        });
+
+        // Mostrar la lista de ejercicios y permitir eliminarlos y borrar historial
+        function cargarListaEjercicios() {
+            fetch('http://localhost:3000/ejercicios')
+                .then(res => res.json())
+                .then(ejercicios => {
+                    const lista = document.getElementById('lista-ejercicios');
+                    lista.innerHTML = '';
+                    ejercicios.forEach(ej => {
+                        const div = document.createElement('div');
+                        div.className = 'ejercicio-item';
+                        div.innerHTML = `
+                            <span><strong>${ej.codigo}</strong> - ${ej.nombre} (${ej.grupo_muscular})</span>
+                            <button data-id="${ej.id}" class="eliminar-ejercicio">Eliminar</button>
+                            <button data-id="${ej.id}" class="borrar-historial">Borrar historial</button>
+                        `;
+                        lista.appendChild(div);
+                    });
+                });
+        }
+
+        document.addEventListener('click', function (e) {
+            if (e.target.classList.contains('eliminar-ejercicio')) {
+                const id = e.target.getAttribute('data-id');
+                if (confirm('¿Seguro que quieres eliminar este ejercicio?')) {
+                    fetch(`http://localhost:3000/ejercicios/${id}`, {
+                        method: 'DELETE'
+                    })
+                        .then(res => res.json())
+                        .then(result => {
+                            if (result.success) {
+                                alert('Ejercicio eliminado');
+                                cargarListaEjercicios();
+                            } else {
+                                alert('Error al eliminar');
+                            }
+                        });
+                }
+            }
+
+            if (e.target.classList.contains('borrar-historial')) {
+                const id = e.target.getAttribute('data-id');
+                if (confirm('¿Seguro que quieres borrar el historial de este ejercicio?')) {
+                    fetch(`http://localhost:3000/historial/${id}`, {
+                        method: 'DELETE'
+                    })
+                        .then(res => res.json())
+                        .then(result => {
+                            if (result.success) {
+                                alert('Historial borrado');
+                            } else {
+                                alert('Error al borrar historial');
+                            }
+                        });
+                }
+            }
+        });
+
+        // Inicial
+        cargarListaEjercicios();
+    </script>
+</body>
+
+</html>

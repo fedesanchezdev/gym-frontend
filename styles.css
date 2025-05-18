@@ -1,0 +1,366 @@
+/* ===== ESTILOS GENERALES ===== */
+:root {
+    --color-primario: #3498db;
+    --color-secundario: #2ecc71;
+    --color-peligro: #e74c3c;
+    --color-texto: #2c3e50;
+    --color-texto-secundario: #7f8c8d;
+    --color-fondo: #f8f9fa;
+    --color-borde: #eaeaea;
+    --sombra: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: var(--color-texto);
+    background-color: var(--color-fondo);
+    padding: 20px;
+    min-height: 100vh;
+}
+
+/* ===== ESTRUCTURA PRINCIPAL ===== */
+header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--color-borde);
+}
+
+h1,
+h2,
+h3 {
+    color: var(--color-texto);
+}
+
+h1 {
+    margin-bottom: 5px;
+}
+
+main {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+footer {
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--color-borde);
+    color: var(--color-texto-secundario);
+    font-size: 0.8em;
+}
+
+/* ===== COMPONENTES COMUNES ===== */
+.fecha-hoy {
+    color: var(--color-texto-secundario);
+    font-size: 0.9em;
+}
+
+.seccion-agregar,
+.seccion-rutina {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--sombra);
+}
+
+.seccion-agregar h2,
+.seccion-rutina h2 {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--color-borde);
+}
+
+/* ===== FORMULARIOS Y CONTROLES ===== */
+button {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-weight: 500;
+}
+
+input,
+select {
+    padding: 10px;
+    border: 1px solid var(--color-borde);
+    border-radius: 4px;
+    transition: border-color 0.3s;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-color: var(--color-primario);
+}
+
+/* ===== SELECTOR DE EJERCICIOS ===== */
+.controles-agregar {
+    display: flex;
+    gap: 10px;
+}
+
+#selector_ejercicios {
+    flex-grow: 1;
+    min-width: 200px;
+}
+
+#agregar_ejercicio {
+    background-color: var(--color-primario);
+    color: white;
+}
+
+#agregar_ejercicio:hover {
+    background-color: #2980b9;
+    transform: translateY(-1px);
+}
+
+
+/* ===== LISTA DE RUTINA ===== */
+.contenedor-rutina {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.mensaje-vacio {
+    text-align: center;
+    color: var(--color-texto-secundario);
+    font-style: italic;
+    padding: 20px;
+}
+
+/* ===== TARJETAS DE EJERCICIO ===== */
+.ejercicio-card {
+    position: relative;
+    padding-bottom: 40px;
+}
+
+.ejercicio-card:hover {
+    transform: translateY(-2px);
+}
+
+.ejercicio-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.acciones-ejercicio {
+    position: relative;
+    width: 100%;
+}
+
+.historial-en-card {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+.ejercicio-header h3 {
+    color: var(--color-texto);
+    font-size: 1.1em;
+}
+
+.eliminar-ejercicio {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+
+.eliminar-ejercicio:hover {
+    background: #c0392b;
+    transform: scale(1.1);
+}
+
+/* ===== SERIES DE EJERCICIOS ===== */
+.series-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.serie {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background-color: var(--color-fondo);
+    border-radius: 4px;
+}
+
+.serie-info {
+    font-weight: bold;
+    min-width: 80px;
+    color: var(--color-texto);
+}
+
+.controles-serie {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-grow: 1;
+    flex-wrap: wrap;
+}
+
+.controles-serie label {
+    font-size: 0.8em;
+    color: var(--color-texto-secundario);
+}
+
+.controles-serie input {
+    padding: 5px;
+    width: 60px;
+}
+
+.guardar-serie {
+    background-color: var(--color-secundario);
+    color: white;
+    padding: 5px 10px;
+    margin-left: auto;
+}
+
+.guardar-serie:hover {
+    background-color: #27ae60;
+}
+
+/* ===== NOTIFICACIONES ===== */
+.notificacion {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    border-radius: 4px;
+    color: white;
+    animation: slide-in 0.5s;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+.notificacion.success {
+    background-color: var(--color-secundario);
+}
+
+.notificacion.error {
+    background-color: var(--color-peligro);
+}
+
+.fade-out {
+    animation: fade-out 0.5s forwards;
+}
+
+@keyframes slide-in {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fade-out {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+/* ===== DISEÑO RESPONSIVE ===== */
+@media (max-width: 768px) {
+    body {
+        padding: 15px;
+    }
+
+    .controles-agregar {
+        flex-direction: column;
+    }
+
+    .serie {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .controles-serie {
+        width: 100%;
+    }
+
+    .guardar-serie {
+        margin-left: 0;
+        width: 100%;
+        margin-top: 5px;
+    }
+
+    .ejercicio-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .eliminar-ejercicio {
+        align-self: flex-end;
+    }
+}
+
+@media (max-width: 480px) {
+    .controles-serie {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+
+    .controles-serie input {
+        width: 100%;
+    }
+}
+
+/* ===== ESTADOS Y EFECTOS ===== */
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+input.invalido {
+    border-color: var(--color-peligro);
+}
+
+.cargando {
+    position: relative;
+    opacity: 0.7;
+}
+
+.cargando::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
