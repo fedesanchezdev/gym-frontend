@@ -11,6 +11,31 @@
 </head>
 
 <body>
+    <script>
+        (async function () {
+            let pass = sessionStorage.getItem('clave_gym');
+            if (!pass) {
+                pass = prompt('Ingrese la contraseña para acceder:');
+            }
+            if (!pass) {
+                window.location.href = 'https://www.google.com'; // O cualquier página de salida
+                return;
+            }
+            const resp = await fetch('https://gym-backend-oasf.onrender.com/validar-clave', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ clave: pass })
+            });
+            const data = await resp.json();
+            if (data.acceso) {
+                sessionStorage.setItem('clave_gym', pass);
+                // Permite el acceso
+            } else {
+                alert('Contraseña incorrecta');
+                window.location.href = 'https://www.google.com'; // O cualquier página de salida
+            }
+        })();
+    </script>
     <header>
         <h1>🏋️ Mi Rutina de Ejercicios</h1>
         <div class="fecha-hoy">
