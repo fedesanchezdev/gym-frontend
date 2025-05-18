@@ -187,6 +187,33 @@
 </head>
 
 <body>
+    <script>
+        (async function () {
+            // Pide la clave al usuario
+            let pass = sessionStorage.getItem('clave_gym');
+            if (!pass) {
+                pass = prompt('Ingrese la contraseña para acceder:');
+            }
+            if (!pass) {
+                window.location.href = 'index.html';
+                return;
+            }
+            // Valida la clave con el backend
+            const resp = await fetch('https://gym-backend-oasf.onrender.com/validar-clave', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ clave: pass })
+            });
+            const data = await resp.json();
+            if (data.acceso) {
+                sessionStorage.setItem('clave_gym', pass);
+                // Permite el acceso
+            } else {
+                alert('Contraseña incorrecta');
+                window.location.href = 'index.html';
+            }
+        })();
+    </script>
     <nav>
         <a href="index.html">🏠 Volver a Rutina</a>
     </nav>

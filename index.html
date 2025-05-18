@@ -70,11 +70,21 @@
     <script>
         document.getElementById('btn-ir-agregar').addEventListener('click', function () {
             const pass = prompt('Ingrese la contraseña para acceder:');
-            if (pass === '6573') {
-                window.location.href = 'agregar-ejercicio.html';
-            } else if (pass !== null) {
-                alert('Contraseña incorrecta');
-            }
+            if (pass === null) return;
+            fetch('https://gym-backend-oasf.onrender.com/validar-clave', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ clave: pass })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.acceso) {
+                        window.location.href = 'agregar-ejercicio.html';
+                    } else {
+                        alert('Contraseña incorrecta');
+                    }
+                })
+                .catch(() => alert('Error de conexión con el backend'));
         });
     </script>
 </body>
