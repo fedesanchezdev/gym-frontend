@@ -16,6 +16,20 @@
         <div class="fecha-hoy">
             <span id="fecha_actual"></span>
         </div>
+
+        <section class="seccion-agregar">
+            <h2>Agregar Ejercicio</h2>
+            <button id="btn-ir-agregar"
+                style="margin:12px 0 18px 0; background:#1976d2; color:#fff; border:none; padding:8px 20px; border-radius:6px; font-size:1em; cursor:pointer;">
+                ➕ Ir a Agregar Ejercicio
+            </button>
+            <div class="controles-agregar">
+                <select id="selector_ejercicios">
+                    <option value="">Cargando ejercicios...</option>
+                </select>
+                <button id="agregar_ejercicio">Agregar a Rutina</button>
+            </div>
+        </section>
     </header>
 
     <main>
@@ -52,6 +66,16 @@
         // Mostrar solo la parte de la fecha (no la hora)
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         document.getElementById('fecha_actual').textContent = utc3.toLocaleDateString('es-ES', options);
+    </script>
+    <script>
+        document.getElementById('btn-ir-agregar').addEventListener('click', function () {
+            const pass = prompt('Ingrese la contraseña para acceder:');
+            if (pass === '6573') {
+                window.location.href = 'agregar-ejercicio.html';
+            } else if (pass !== null) {
+                alert('Contraseña incorrecta');
+            }
+        });
     </script>
 </body>
 
