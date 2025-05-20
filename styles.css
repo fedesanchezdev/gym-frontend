@@ -330,6 +330,20 @@ select:focus {
     }
 }
 
+@media (max-width: 480px) {
+
+    input,
+    select,
+    textarea,
+    button {
+        font-size: 1.2em;
+    }
+
+    .controles-serie input {
+        width: 100%;
+    }
+}
+
 /* ===== ESTADOS Y EFECTOS ===== */
 button:disabled {
     opacity: 0.6;
