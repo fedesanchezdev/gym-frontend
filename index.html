@@ -6,8 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Rutina de Ejercicios</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1976d2">
+    <!-- Para iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="apple-touch-icon" href="icon-192.png">
     <!-- 📊 Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 
 <body>
@@ -58,7 +65,7 @@
                 <select id="selector_ejercicios">
                     <option value="">Cargando ejercicios...</option>
                 </select>
-                <button id="agregar_ejercicio">Agregar a Rutina</button>
+                <button id="agregar_ejercicio" style="font-size:1.15em;">Agregar a la Rutina</button>
             </div>
         </section>
 
@@ -88,6 +95,11 @@
         document.getElementById('btn-ir-agregar').addEventListener('click', function () {
             window.location.href = 'agregar-ejercicio.html';
         });
+    </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
     </script>
 </body>
 

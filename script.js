@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 ejercicios.forEach(ejercicio => {
                     const option = document.createElement('option');
-                    option.value = ejercicio._id; // MongoDB usa _id
+                    option.value = ejercicio._id;
                     option.textContent = `${ejercicio.codigo} - ${ejercicio.grupo_muscular} - ${ejercicio.nombre}`;
                     selectorEjercicios.appendChild(option);
                 });
@@ -60,23 +60,26 @@ document.addEventListener('DOMContentLoaded', () => {
         const esSN = series[0]?.startsWith('SN');
 
         if (esSN) {
-            // Parsear datos actuales si existen
-            const partes = series[0].split(' ');
-            const repsTotales = partes[1]?.substring(1) || '';
-            const fallos = partes[2]?.substring(1).split('-').filter(Boolean) || [''];
-            const kg = partes[3]?.substring(1) || '';
-            const inc = partes[4]?.substring(1) || '';
-
+            // Toma los valores de la primera línea para reps, kg, inc
+            let repsTotales = '';
+            let kg = '';
+            let inc = '';
             seriesHTML += `<div id="sn-series-list">`;
-            fallos.forEach((fallo, idx) => {
+            series.forEach((linea, idx) => {
+                const partes = linea.split(' ');
+                repsTotales = partes[1]?.substring(1) || repsTotales;
+                const fallo = partes[2]?.substring(1) || '';
+                kg = partes[3]?.substring(1) || kg;
+                inc = partes[4]?.substring(1) || inc;
                 seriesHTML += `
                     <div class="sn-serie" data-index="${idx}" style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">
                         <label>F <input type="number" class="sn-fallo" value="${fallo}" min="0" style="width:60px"></label>
+                        <button type="button" class="eliminar-sn-serie" title="Eliminar serie" style="background:#f44336;color:#fff;border:none;border-radius:3px;padding:2px 8px;cursor:pointer;font-size:1em;margin-left:6px;">❌</button>
                     </div>
                 `;
             });
             seriesHTML += `</div>
-                <div id="sn-total-reps" style="margin-bottom:8px; font-weight:bold; color:#1976d2;">Total ingresado: 0 / ${repsTotales}</div>
+                <div id="sn-total-reps" style="margin-bottom:8px; font-weight:bold; color:#1976d2;">Faltan: 0 repeticiones</div>
                 <button type="button" class="sn-agregar-serie" style="margin-bottom:8px;">Agregar Serie</button>
                 <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
                     <label>Reps totales <input type="number" class="sn-reps" value="${repsTotales}" min="1" style="width:70px"></label>
@@ -119,15 +122,15 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             <div class="series-container">${seriesHTML}</div>
             <div class="acciones-ejercicio" style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;">
-                <div>
-                    <button class="guardar-todas-series" style="background:#ccc;color:#333;" data-id="${ejercicio.rutina_id}">Guardar</button>
-                    <button class="ver-historial" data-id="${ejercicio._id}">📈 Historial</button>
-                </div>
-                <button class="eliminar-ejercicio" data-id="${ejercicio.rutina_id}" style="background:#f44336;color:#fff;">Eliminar</button>
-            </div>
+        <div>
+            <button class="guardar-todas-series" style="background:#ccc;color:#333;font-size:1.1em;padding:6px 18px;" data-id="${ejercicio.rutina_id}">Guardar</button>
+            <button class="ver-historial" data-id="${ejercicio._id}" style="font-size:1.1em;padding:6px 18px;">Historial</button>
+        </div>
+        <button class="eliminar-ejercicio" data-id="${ejercicio.rutina_id}" style="background:#f44336;color:#fff;font-size:1.1em;padding:6px 18px;">Quitar</button>
+    </div>
         `;
 
-        // --- Lógica para agregar series dinámicamente y contador para SN ---
+        // --- Lógica para agregar/eliminar series dinámicamente y contador para SN ---
         if (esSN) {
             const snSeriesList = card.querySelector('#sn-series-list');
             const totalRepsDiv = card.querySelector('#sn-total-reps');
@@ -156,9 +159,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 div.className = 'sn-serie';
                 div.dataset.index = idx;
                 div.style = 'display:flex;gap:8px;align-items:center;margin-bottom:6px;';
-                div.innerHTML = `<label>F <input type="number" class="sn-fallo" value="0" min="0" style="width:60px"></label>`;
+                div.innerHTML = `<label>F <input type="number" class="sn-fallo" value="0" min="0" style="width:60px"></label>
+                                 <button type="button" class="eliminar-sn-serie" title="Eliminar serie" style="background:#f44336;color:#fff;border:none;border-radius:3px;padding:2px 8px;cursor:pointer;font-size:1em;margin-left:6px;">❌</button>`;
                 snSeriesList.appendChild(div);
                 actualizarTotalReps();
+            });
+
+            // Eliminar una serie SN
+            card.addEventListener('click', function (e) {
+                if (e.target.classList.contains('eliminar-sn-serie')) {
+                    const div = e.target.closest('.sn-serie');
+                    div.remove();
+                    actualizarTotalReps();
+                }
             });
 
             // Inicializa el contador al cargar la card
@@ -234,7 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({
                     rutina_id: rutinaId,
                     series: seriesNuevas.join('\n'),
-                    fecha: fechaSeleccionada // <-- ahora se envía la fecha elegida
+                    fecha: fechaSeleccionada
                 })
             })
                 .then(res => res.json())
