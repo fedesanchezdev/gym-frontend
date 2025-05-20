@@ -59,18 +59,15 @@ document.addEventListener('DOMContentLoaded', () => {
             if (partes.length < 5) return;
 
             seriesHTML += `
-                <div class="serie" data-index="${index}">
-                    <span class="serie-info">${partes[0]} ${partes[1]}</span>
-                    <div class="controles-serie">
-                        <label>Fallo:</label>
-                        <input type="text" class="fallo" style="width:170px" value="${(partes[2] || 'F0').substring(1)}" min="0">
-                        <label>Peso (kg):</label>
-                        <input type="number" class="peso" value="${(partes[3] || 'K0').substring(1)}" min="0" step="0.5">
-                        <label>Incremento:</label>
-                        <input type="number" class="incremento" value="${(partes[4] || '+0').substring(1)}" min="0" step="0.5">
-                    </div>
-                </div>
-            `;
+    <div class="serie" data-index="${index}">
+        <div style="font-weight:bold; font-size:1.1em;">${partes[0]} ${partes[1]}</div>
+        <div style="display:flex; gap:8px; align-items:center; margin-bottom:8px;">
+            <label style="display:flex;align-items:center;">F <input type="number" class="fallo" style="width:60px;margin-left:2px;" value="${(partes[2] || 'F0').substring(1)}" min="0"></label>
+            <label style="display:flex;align-items:center;">K <input type="number" class="peso" style="width:70px;margin-left:2px;" value="${(partes[3] || 'K0').substring(1)}" min="0" step="0.5"></label>
+            <label style="display:flex;align-items:center;">< <input type="number" class="incremento" style="width:70px;margin-left:2px;" value="${(partes[4] || '+0').substring(1)}" min="0" step="0.5"></label>
+        </div>
+    </div>
+`;
         });
 
         // Fecha por defecto: hoy en formato yyyy-mm-dd (ajustada a UTC-3)
