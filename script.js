@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             seriesHTML += `
     <div class="serie" data-index="${index}">
-        <div style="font-weight:bold; font-size:1.1em;">${partes[0]} ${partes[1]}</div>
+        <div class="serie-info" style="font-weight:bold; font-size:1.1em;">${partes[0]} ${partes[1]}</div>
         <div style="display:flex; gap:8px; align-items:center; margin-bottom:8px;">
             <label style="display:flex;align-items:center;">F <input type="number" class="fallo" style="width:60px;margin-left:2px;" value="${(partes[2] || 'F0').substring(1)}" min="0"></label>
             <label style="display:flex;align-items:center;">K <input type="number" class="peso" style="width:70px;margin-left:2px;" value="${(partes[3] || 'K0').substring(1)}" min="0" step="0.5"></label>
