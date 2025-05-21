@@ -1,13 +1,13 @@
 /* ===== ESTILOS GENERALES ===== */
 :root {
-    --color-primario: #3498db;
-    --color-secundario: #2ecc71;
+    --color-primario: #1976d2;
+    --color-secundario: #43a047;
     --color-peligro: #e74c3c;
-    --color-texto: #2c3e50;
-    --color-texto-secundario: #7f8c8d;
-    --color-fondo: #f8f9fa;
-    --color-borde: #eaeaea;
-    --sombra: 0 2px 10px rgba(0, 0, 0, 0.05);
+    --color-texto: #f5f5f5;
+    --color-texto-secundario: #b0b0b0;
+    --color-fondo: #181c23;
+    --color-borde: #b0b0b0;
+    --sombra: 0 2px 10px rgba(0, 0, 0, 0.4);
 }
 
 * {
@@ -64,8 +64,9 @@ footer {
 }
 
 .seccion-agregar,
-.seccion-rutina {
-    background: white;
+.seccion-rutina,
+.seccion-admin {
+    background: #232936;
     border-radius: 8px;
     padding: 20px;
     margin-bottom: 20px;
@@ -73,7 +74,8 @@ footer {
 }
 
 .seccion-agregar h2,
-.seccion-rutina h2 {
+.seccion-rutina h2,
+.seccion-admin h2 {
     margin-bottom: 15px;
     padding-bottom: 10px;
     border-bottom: 1px solid var(--color-borde);
@@ -87,6 +89,7 @@ button {
     border-radius: 4px;
     padding: 10px 20px;
     font-weight: 500;
+    font-size: 1.1em;
 }
 
 input,
@@ -94,6 +97,8 @@ select {
     padding: 10px;
     border: 1px solid var(--color-borde);
     border-radius: 4px;
+    background: #232936;
+    color: var(--color-texto);
     transition: border-color 0.3s;
 }
 
@@ -112,6 +117,8 @@ select:focus {
 #selector_ejercicios {
     flex-grow: 1;
     min-width: 200px;
+    background: #232936;
+    color: var(--color-texto);
 }
 
 #agregar_ejercicio {
@@ -123,7 +130,6 @@ select:focus {
     background-color: #2980b9;
     transform: translateY(-1px);
 }
-
 
 /* ===== LISTA DE RUTINA ===== */
 .contenedor-rutina {
@@ -141,12 +147,22 @@ select:focus {
 
 /* ===== TARJETAS DE EJERCICIO ===== */
 .ejercicio-card {
+    background: #232936;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px #0006;
+    border: 1.5px solid var(--color-borde);
+    margin-bottom: 28px;
+    padding: 22px 18px 18px 18px;
     position: relative;
-    padding-bottom: 40px;
+    transition: box-shadow 0.2s;
 }
 
 .ejercicio-card:hover {
     transform: translateY(-2px);
+}
+
+.ejercicio-card:not(:last-child) {
+    margin-bottom: 32px;
 }
 
 .ejercicio-header {
@@ -154,6 +170,13 @@ select:focus {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
+}
+
+.ejercicio-header h3 {
+    color: var(--color-texto);
+    font-size: 1.25em;
+    margin-top: 0;
+    margin-bottom: 12px;
 }
 
 .acciones-ejercicio {
@@ -165,11 +188,8 @@ select:focus {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     border-radius: 8px;
     margin-top: 10px;
-}
-
-.ejercicio-header h3 {
-    color: var(--color-texto);
-    font-size: 1.1em;
+    background: #232936;
+    border: 1px solid var(--color-borde);
 }
 
 .eliminar-ejercicio {
@@ -196,7 +216,7 @@ select:focus {
     align-items: center;
     gap: 10px;
     padding: 10px;
-    background-color: var(--color-fondo);
+    background-color: #181c23;
     border-radius: 4px;
 }
 
@@ -222,6 +242,8 @@ select:focus {
 .controles-serie input {
     padding: 5px;
     width: 60px;
+    background: #232936;
+    color: var(--color-texto);
 }
 
 .guardar-serie {
@@ -258,6 +280,20 @@ select:focus {
 
 .fade-out {
     animation: fade-out 0.5s forwards;
+}
+
+.seccion-admin {
+    background: #232936;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--sombra);
+}
+
+.seccion-admin h2 {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--color-borde);
 }
 
 @keyframes slide-in {
@@ -377,4 +413,59 @@ input.invalido {
     to {
         transform: translate(-50%, -50%) rotate(360deg);
     }
+}
+
+/* Forzar color claro en todo el historial, incluidas tablas y celdas */
+.historial-en-card,
+.historial-en-card *,
+.historial-en-card table,
+.historial-en-card th,
+.historial-en-card td {
+    color: var(--color-texto) !important;
+    background: transparent !important;
+    border-color: var(--color-borde) !important;
+}
+
+/* Si usas Chart.js, fuerza el fondo del canvas a transparente */
+.historial-en-card canvas {
+    background: transparent !important;
+}
+
+/* Corrige el fondo de los botones dentro del historial */
+.historial-en-card button {
+    background: var(--color-peligro) !important;
+    color: #fff !important;
+    border: none;
+}
+
+.historial-en-card button:hover {
+    background: #c0392b !important;
+}
+
+/* Series SN en grilla de 4 o 6 columnas en pantallas grandes */
+#sn-series-list {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 10px;
+}
+
+@media (min-width: 600px) {
+    #sn-series-list {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (min-width: 900px) {
+    #sn-series-list {
+        grid-template-columns: repeat(6, 1fr);
+    }
+}
+
+.sn-serie {
+    background: #181c23;
+    border-radius: 6px;
+    padding: 8px 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }

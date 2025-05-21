@@ -122,12 +122,12 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             <div class="series-container">${seriesHTML}</div>
             <div class="acciones-ejercicio" style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;">
-        <div>
-            <button class="guardar-todas-series" style="background:#ccc;color:#333;font-size:1.1em;padding:6px 18px;" data-id="${ejercicio.rutina_id}">Guardar</button>
-            <button class="ver-historial" data-id="${ejercicio._id}" style="font-size:1.1em;padding:6px 18px;">Historial</button>
-        </div>
-        <button class="eliminar-ejercicio" data-id="${ejercicio.rutina_id}" style="background:#f44336;color:#fff;font-size:1.1em;padding:6px 18px;">Quitar</button>
-    </div>
+                <div>
+                    <button class="guardar-todas-series" style="background:#4caf50;color:#fff;font-size:1.1em;padding:6px 18px;" data-id="${ejercicio.rutina_id}">Guardar</button>
+                    <button class="ver-historial" data-id="${ejercicio._id}" style="background:#ccc;color:#333;font-size:1.1em;padding:6px 18px;">Historial</button>
+                </div>
+                <button class="eliminar-ejercicio" data-id="${ejercicio.rutina_id}" style="background:#f44336;color:#fff;font-size:1.1em;padding:6px 18px;">Quitar</button>
+            </div>
         `;
 
         // --- Lógica para agregar/eliminar series dinámicamente y contador para SN ---
@@ -256,21 +256,50 @@ document.addEventListener('DOMContentLoaded', () => {
                         e.target.style.background = '#4caf50';
                         e.target.style.color = '#fff';
                         e.target.textContent = 'Guardado';
+
+                        // Actualiza el historial si está abierto
+                        const card = e.target.closest('.ejercicio-card');
+                        const btnHistorial = card.querySelector('.ver-historial');
+                        const historialDiv = card.querySelector('.historial-en-card');
+                        if (historialDiv && btnHistorial) {
+                            historialDiv.remove();
+                            mostrarGraficoHistorialEnCard(btnHistorial.dataset.id, card);
+                            btnHistorial.style.background = "#4caf50";
+                            btnHistorial.style.color = "#fff";
+                        }
+
                         setTimeout(() => {
-                            e.target.style.background = '#ccc';
-                            e.target.style.color = '#333';
+                            e.target.style.background = '#4caf50';
+                            e.target.style.color = '#fff';
                             e.target.textContent = 'Guardar';
                         }, 2000);
                     }
                 });
         }
 
-        // Ver historial (gráfico de barras, modal dinámico)
+        // Ver historial (toggle en la card)
         if (e.target.classList.contains('ver-historial')) {
             const card = e.target.closest('.ejercicio-card');
+            const btn = e.target;
             // Cierra cualquier historial abierto en otra card
-            document.querySelectorAll('.historial-en-card').forEach(el => el.remove());
-            mostrarGraficoHistorialEnCard(e.target.dataset.id, card);
+            document.querySelectorAll('.historial-en-card').forEach(div => {
+                div.remove();
+            });
+            document.querySelectorAll('.ver-historial').forEach(b => {
+                b.style.background = "#ccc";
+                b.style.color = "#333";
+            });
+
+            const existente = card.querySelector('.historial-en-card');
+            if (existente) {
+                // Si ya está abierto en esta card, solo lo cierra
+                btn.style.background = "#ccc";
+                btn.style.color = "#333";
+            } else {
+                mostrarGraficoHistorialEnCard(btn.dataset.id, card);
+                btn.style.background = "#4caf50";
+                btn.style.color = "#fff";
+            }
         }
     });
 
