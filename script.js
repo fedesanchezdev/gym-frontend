@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="serie" data-index="${index}">
                 <div class="serie-info" style="font-weight:bold; font-size:1.1em;">${partes[0]} ${partes[1]}</div>
                 <div style="display:flex; gap:8px; align-items:center; margin-bottom:8px;">
-                    <label style="display:flex;align-items:center;">F <input type="text" class="fallo" style="width:100px;margin-left:2px;" value="${(partes[2] || 'F0').substring(1)}" min="0"></label>
+                    <label style="display:flex;align-items:center;">F <input type="number" class="fallo" style="width:70px;margin-left:2px;" value="${(partes[2] || 'F0').substring(1)}" min="0"></label>
                     <label style="display:flex;align-items:center;">K <input type="number" class="peso" style="width:70px;margin-left:2px;" value="${(partes[3] || 'K0').substring(1)}" min="0" step="0.5"></label>
                     <label style="display:flex;align-items:center;">< <input type="number" class="incremento" style="width:70px;margin-left:2px;" value="${(partes[4] || '+0').substring(1)}" min="0" step="0.5"></label>
                 </div>
@@ -111,6 +111,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const utc3 = new Date(now.getTime() - 3 * 60 * 60 * 1000);
         const hoy = utc3.toISOString().slice(0, 10);
 
+        // Temporizador de descanso
+        const tiempoDescanso = ejercicio.descanso || 60;
+
         card.innerHTML = `
             <div class="ejercicio-header">
                 <h3>${ejercicio.codigo} - ${ejercicio.grupo_muscular} - ${ejercicio.nombre}</h3>
@@ -121,12 +124,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 </label>
             </div>
             <div class="series-container">${seriesHTML}</div>
+            <div class="descanso-timer" style="margin-top:14px;">
+                <button class="iniciar-descanso" style="background:#1976d2;color:#fff;padding:6px 18px;border-radius:5px;">⏱️ Iniciar descanso (${tiempoDescanso}s)</button>
+                <span class="timer-text" style="margin-left:14px;font-weight:bold;color:#43a047;display:none;">00:00</span>
+            </div>
             <div class="acciones-ejercicio" style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;">
                 <div>
-                    <button class="guardar-todas-series" style="background:#4caf50;color:#fff;font-size:1.1em;padding:6px 18px;" data-id="${ejercicio.rutina_id}">Guardar</button>
-                    <button class="ver-historial" data-id="${ejercicio._id}" style="background:#ccc;color:#333;font-size:1.1em;padding:6px 18px;">Historial</button>
+                    <button class="guardar-todas-series" style="background:#4caf50;color:#fff;font-size:1.1em;padding:6px 8px;" data-id="${ejercicio.rutina_id}">Guardar</button>
+                    <button class="ver-historial" data-id="${ejercicio._id}" style="background:#ccc;color:#333;font-size:1.1em;padding:6px 8px;">Historial</button>
                 </div>
-                <button class="eliminar-ejercicio" data-id="${ejercicio.rutina_id}" style="background:#f44336;color:#fff;font-size:1.1em;padding:6px 18px;">Quitar</button>
+                <button class="eliminar-ejercicio" data-id="${ejercicio.rutina_id}" style="background:#f44336;color:#fff;font-size:1.1em;padding:6px 8px;">Quitar</button>
             </div>
         `;
 
@@ -177,6 +184,32 @@ document.addEventListener('DOMContentLoaded', () => {
             // Inicializa el contador al cargar la card
             setTimeout(actualizarTotalReps, 0);
         }
+
+        // --- Temporizador de descanso ---
+        const btnDescanso = card.querySelector('.iniciar-descanso');
+        const timerText = card.querySelector('.timer-text');
+        let timerInterval = null;
+
+        btnDescanso.addEventListener('click', () => {
+            let tiempo = tiempoDescanso;
+            btnDescanso.disabled = true;
+            timerText.style.display = 'inline';
+            timerText.textContent = `${String(Math.floor(tiempo / 60)).padStart(2, '0')}:${String(tiempo % 60).padStart(2, '0')}`;
+            timerText.style.color = '#43a047';
+
+            timerInterval = setInterval(() => {
+                tiempo--;
+                const min = String(Math.floor(tiempo / 60)).padStart(2, '0');
+                const seg = String(tiempo % 60).padStart(2, '0');
+                timerText.textContent = `${min}:${seg}`;
+                if (tiempo <= 0) {
+                    clearInterval(timerInterval);
+                    timerText.textContent = '¡Fin del descanso!';
+                    timerText.style.color = '#e74c3c';
+                    btnDescanso.disabled = false;
+                }
+            }, 1000);
+        });
 
         return card;
     }
