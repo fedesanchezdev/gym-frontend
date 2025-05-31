@@ -128,7 +128,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 <button class="iniciar-descanso" style="background:#1976d2;color:#fff;padding:6px 18px;border-radius:5px;">⏱️</button>
                 <button class="pausar-descanso" style="background:#ffa726;color:#fff;padding:6px 18px;border-radius:5px;display:none;">⏸️</button>
                 <button class="reiniciar-descanso" style="background:#e74c3c;color:#fff;padding:6px 18px;border-radius:5px;display:none;">⏹️</button>
-<span class="timer-text" style="margin-left:14px;font-weight:bold;color:#43a047;display:none;font-size:2em;">00:00</span>                <span class="timer-label" style="margin-left:8px;color:#888;">(${tiempoDescanso}s)</span>
+                <span class="timer-text" style="margin-left:14px;font-weight:bold;color:#43a047;display:none;font-size:2em;">00:00</span>
+                <span class="timer-label" style="margin-left:8px;color:#888;">(${tiempoDescanso}s)</span>
             </div>
             <div class="acciones-ejercicio" style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;">
                 <div>
@@ -187,18 +188,19 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(actualizarTotalReps, 0);
         }
 
-        // --- Temporizador de descanso con pausa y reinicio ---
+        // --- Temporizador de descanso con pausa y reinicio basado en hora real ---
         const btnDescanso = card.querySelector('.iniciar-descanso');
         const btnPausa = card.querySelector('.pausar-descanso');
         const btnReiniciar = card.querySelector('.reiniciar-descanso');
         const timerText = card.querySelector('.timer-text');
         let timerInterval = null;
-        let tiempo = tiempoDescanso;
+        let tiempoRestante = tiempoDescanso;
+        let fin = null;
         let enPausa = false;
 
         function actualizarTimerText() {
-            const min = String(Math.floor(tiempo / 60)).padStart(2, '0');
-            const seg = String(tiempo % 60).padStart(2, '0');
+            const min = String(Math.floor(tiempoRestante / 60)).padStart(2, '0');
+            const seg = String(tiempoRestante % 60).padStart(2, '0');
             timerText.textContent = `${min}:${seg}`;
         }
 
@@ -209,37 +211,43 @@ document.addEventListener('DOMContentLoaded', () => {
             timerText.style.display = 'inline';
             timerText.style.color = '#43a047';
             enPausa = false;
+            tiempoRestante = tiempoDescanso;
+            fin = Date.now() + tiempoRestante * 1000;
             actualizarTimerText();
 
+            clearInterval(timerInterval);
             timerInterval = setInterval(() => {
                 if (!enPausa) {
-                    tiempo--;
+                    tiempoRestante = Math.max(0, Math.round((fin - Date.now()) / 1000));
                     actualizarTimerText();
-                    if (tiempo <= 0) {
+                    if (tiempoRestante <= 0) {
                         clearInterval(timerInterval);
                         timerText.textContent = '¡Fin del descanso!';
                         timerText.style.color = '#e74c3c';
                         btnDescanso.disabled = false;
                         btnPausa.style.display = 'none';
                         btnReiniciar.style.display = 'none';
-                        tiempo = tiempoDescanso;
-                        enPausa = false;
-                        btnPausa.textContent = '⏸️';
-                        btnPausa.title = 'Pausar';
                     }
                 }
-            }, 1000);
+            }, 500);
         });
 
         btnPausa.addEventListener('click', () => {
             enPausa = !enPausa;
-            btnPausa.textContent = enPausa ? '▶️' : '⏸️';
-            btnPausa.title = enPausa ? 'Reanudar' : 'Pausar';
+            if (enPausa) {
+                tiempoRestante = Math.max(0, Math.round((fin - Date.now()) / 1000));
+                btnPausa.textContent = '▶️';
+                btnPausa.title = 'Reanudar';
+            } else {
+                fin = Date.now() + tiempoRestante * 1000;
+                btnPausa.textContent = '⏸️';
+                btnPausa.title = 'Pausar';
+            }
         });
 
         btnReiniciar.addEventListener('click', () => {
             clearInterval(timerInterval);
-            tiempo = tiempoDescanso;
+            tiempoRestante = tiempoDescanso;
             actualizarTimerText();
             timerText.style.color = '#43a047';
             btnDescanso.disabled = false;
