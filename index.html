@@ -14,7 +14,6 @@
     <link rel="apple-touch-icon" href="icon-192.png">
     <!-- 📊 Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 </head>
 
 <body>
@@ -25,7 +24,7 @@
                 pass = prompt('Ingrese la contraseña para acceder:');
             }
             if (!pass) {
-                window.location.href = 'https://www.google.com'; // O cualquier página de salida
+                window.location.href = 'https://www.google.com';
                 return;
             }
             const resp = await fetch('https://gym-backend-oasf.onrender.com/validar-clave', {
@@ -36,10 +35,9 @@
             const data = await resp.json();
             if (data.acceso) {
                 sessionStorage.setItem('clave_gym', pass);
-                // Permite el acceso
             } else {
                 alert('Contraseña incorrecta');
-                window.location.href = 'https://www.google.com'; // O cualquier página de salida
+                window.location.href = 'https://www.google.com';
             }
         })();
     </script>
@@ -48,8 +46,6 @@
         <div class="fecha-hoy">
             <span id="fecha_actual"></span>
         </div>
-
-
     </header>
 
     <main>

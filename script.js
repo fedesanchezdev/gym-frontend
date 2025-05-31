@@ -82,9 +82,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div id="sn-total-reps" style="margin-bottom:8px; font-weight:bold; color:#1976d2;">Faltan: 0 repeticiones</div>
                 <button type="button" class="sn-agregar-serie" style="margin-bottom:8px;">Agregar Serie</button>
                 <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
-                    <label>Reps totales <input type="number" class="sn-reps" value="${repsTotales}" min="1" style="width:70px"></label>
-                    <label>K <input type="number" class="sn-kg" value="${kg}" min="0" step="0.5" style="width:70px"></label>
-                    <label>+ <input type="number" class="sn-inc" value="${inc}" min="0" step="0.5" style="width:70px"></label>
+                    <label>Reps totales <input type="number" class="sn-reps" value="${repsTotales}" min="1" style="width:67px"></label>
+                    <label>K <input type="number" class="sn-kg" value="${kg}" min="0" step="0.5" style="width:67px"></label>
+                    <label>+ <input type="number" class="sn-inc" value="${inc}" min="0" step="0.5" style="width:67px"></label>
                 </div>
             `;
         } else {
@@ -97,9 +97,9 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="serie" data-index="${index}">
                 <div class="serie-info" style="font-weight:bold; font-size:1.1em;">${partes[0]} ${partes[1]}</div>
                 <div style="display:flex; gap:8px; align-items:center; margin-bottom:8px;">
-                    <label style="display:flex;align-items:center;">F <input type="number" class="fallo" style="width:70px;margin-left:2px;" value="${(partes[2] || 'F0').substring(1)}" min="0"></label>
-                    <label style="display:flex;align-items:center;">K <input type="number" class="peso" style="width:70px;margin-left:2px;" value="${(partes[3] || 'K0').substring(1)}" min="0" step="0.5"></label>
-                    <label style="display:flex;align-items:center;">< <input type="number" class="incremento" style="width:70px;margin-left:2px;" value="${(partes[4] || '+0').substring(1)}" min="0" step="0.5"></label>
+                    <label style="display:flex;align-items:center;">F <input type="number" class="fallo" style="width:67px;margin-left:2px;" value="${(partes[2] || 'F0').substring(1)}" min="0"></label>
+                    <label style="display:flex;align-items:center;">K <input type="number" class="peso" style="width:67px;margin-left:2px;" value="${(partes[3] || 'K0').substring(1)}" min="0" step="0.5"></label>
+                    <label style="display:flex;align-items:center;">< <input type="number" class="incremento" style="width:67px;margin-left:2px;" value="${(partes[4] || '<0').substring(1)}" min="0" step="0.5"></label>
                 </div>
             </div>
         `;
@@ -125,8 +125,10 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             <div class="series-container">${seriesHTML}</div>
             <div class="descanso-timer" style="margin-top:14px;">
-                <button class="iniciar-descanso" style="background:#1976d2;color:#fff;padding:6px 18px;border-radius:5px;">⏱️ Iniciar descanso (${tiempoDescanso}s)</button>
-                <span class="timer-text" style="margin-left:14px;font-weight:bold;color:#43a047;display:none;">00:00</span>
+                <button class="iniciar-descanso" style="background:#1976d2;color:#fff;padding:6px 18px;border-radius:5px;">⏱️</button>
+                <button class="pausar-descanso" style="background:#ffa726;color:#fff;padding:6px 18px;border-radius:5px;display:none;">⏸️</button>
+                <button class="reiniciar-descanso" style="background:#e74c3c;color:#fff;padding:6px 18px;border-radius:5px;display:none;">⏹️</button>
+<span class="timer-text" style="margin-left:14px;font-weight:bold;color:#43a047;display:none;font-size:2em;">00:00</span>                <span class="timer-label" style="margin-left:8px;color:#888;">(${tiempoDescanso}s)</span>
             </div>
             <div class="acciones-ejercicio" style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;">
                 <div>
@@ -185,30 +187,68 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(actualizarTotalReps, 0);
         }
 
-        // --- Temporizador de descanso ---
+        // --- Temporizador de descanso con pausa y reinicio ---
         const btnDescanso = card.querySelector('.iniciar-descanso');
+        const btnPausa = card.querySelector('.pausar-descanso');
+        const btnReiniciar = card.querySelector('.reiniciar-descanso');
         const timerText = card.querySelector('.timer-text');
         let timerInterval = null;
+        let tiempo = tiempoDescanso;
+        let enPausa = false;
+
+        function actualizarTimerText() {
+            const min = String(Math.floor(tiempo / 60)).padStart(2, '0');
+            const seg = String(tiempo % 60).padStart(2, '0');
+            timerText.textContent = `${min}:${seg}`;
+        }
 
         btnDescanso.addEventListener('click', () => {
-            let tiempo = tiempoDescanso;
             btnDescanso.disabled = true;
+            btnPausa.style.display = '';
+            btnReiniciar.style.display = '';
             timerText.style.display = 'inline';
-            timerText.textContent = `${String(Math.floor(tiempo / 60)).padStart(2, '0')}:${String(tiempo % 60).padStart(2, '0')}`;
             timerText.style.color = '#43a047';
+            enPausa = false;
+            actualizarTimerText();
 
             timerInterval = setInterval(() => {
-                tiempo--;
-                const min = String(Math.floor(tiempo / 60)).padStart(2, '0');
-                const seg = String(tiempo % 60).padStart(2, '0');
-                timerText.textContent = `${min}:${seg}`;
-                if (tiempo <= 0) {
-                    clearInterval(timerInterval);
-                    timerText.textContent = '¡Fin del descanso!';
-                    timerText.style.color = '#e74c3c';
-                    btnDescanso.disabled = false;
+                if (!enPausa) {
+                    tiempo--;
+                    actualizarTimerText();
+                    if (tiempo <= 0) {
+                        clearInterval(timerInterval);
+                        timerText.textContent = '¡Fin del descanso!';
+                        timerText.style.color = '#e74c3c';
+                        btnDescanso.disabled = false;
+                        btnPausa.style.display = 'none';
+                        btnReiniciar.style.display = 'none';
+                        tiempo = tiempoDescanso;
+                        enPausa = false;
+                        btnPausa.textContent = '⏸️';
+                        btnPausa.title = 'Pausar';
+                    }
                 }
             }, 1000);
+        });
+
+        btnPausa.addEventListener('click', () => {
+            enPausa = !enPausa;
+            btnPausa.textContent = enPausa ? '▶️' : '⏸️';
+            btnPausa.title = enPausa ? 'Reanudar' : 'Pausar';
+        });
+
+        btnReiniciar.addEventListener('click', () => {
+            clearInterval(timerInterval);
+            tiempo = tiempoDescanso;
+            actualizarTimerText();
+            timerText.style.color = '#43a047';
+            btnDescanso.disabled = false;
+            btnPausa.style.display = 'none';
+            btnReiniciar.style.display = 'none';
+            timerText.style.display = 'inline';
+            btnPausa.textContent = '⏸️';
+            btnPausa.title = 'Pausar';
+            enPausa = false;
         });
 
         return card;
@@ -254,7 +294,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const inc = cardEjercicio.querySelector('.sn-inc').value;
                 const snSeriesList = cardEjercicio.querySelectorAll('.sn-serie .sn-fallo');
                 snSeriesList.forEach((input, idx) => {
-                    seriesNuevas.push(`SN R${reps} F${input.value} K${kg} +${inc}`);
+                    seriesNuevas.push(`SN R${reps} F${input.value} K${kg} <${inc}`);
                 });
             } else {
                 // Series fijas
@@ -266,7 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     partes.push(info[1]); // R8, etc.
                     partes.push('F' + serieDiv.querySelector('.fallo').value);
                     partes.push('K' + serieDiv.querySelector('.peso').value);
-                    partes.push('+' + serieDiv.querySelector('.incremento').value);
+                    partes.push('<' + serieDiv.querySelector('.incremento').value);
                     seriesNuevas.push(partes.join(' '));
                 });
             }
