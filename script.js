@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
                     <label>Reps totales <input type="number" class="sn-reps" value="${repsTotales}" min="1" style="width:67px"></label>
                     <label>K <input type="number" class="sn-kg" value="${kg}" min="0" step="0.5" style="width:67px"></label>
-                    <label>+ <input type="number" class="sn-inc" value="${inc}" min="0" step="0.5" style="width:67px"></label>
+                    <label>< <input type="number" class="sn-inc" value="${inc}" min="0" step="0.5" style="width:67px"></label>
                 </div>
             `;
         } else {
@@ -282,8 +282,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // Eliminar ejercicio de la rutina
         if (e.target.classList.contains('eliminar-ejercicio')) {
             const rutinaId = e.target.dataset.id;
-            fetch(`${API_URL}/rutina_hoy/${rutinaId}`, { method: 'DELETE' })
-                .then(() => cargarRutinaHoy());
+            if (confirm('¿Seguro que quieres quitar este ejercicio de la rutina de hoy?')) {
+                fetch(`${API_URL}/rutina_hoy/${rutinaId}`, { method: 'DELETE' })
+                    .then(() => cargarRutinaHoy());
+            }
         }
 
         // Guardar todas las series de un ejercicio
@@ -334,7 +336,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 .then(res => res.json())
                 .then(result => {
                     if (result.success) {
-                        e.target.style.background = '#4caf50';
+                        e.target.style.background = '#A5D6A7'; // verde pálido
                         e.target.style.color = '#fff';
                         e.target.textContent = 'Guardado';
 
@@ -353,7 +355,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             e.target.style.background = '#4caf50';
                             e.target.style.color = '#fff';
                             e.target.textContent = 'Guardar';
-                        }, 2000);
+                        }, 6000);
                     }
                 });
         }
@@ -362,18 +364,22 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target.classList.contains('ver-historial')) {
             const card = e.target.closest('.ejercicio-card');
             const btn = e.target;
+
             // Cierra cualquier historial abierto en otra card
             document.querySelectorAll('.historial-en-card').forEach(div => {
-                div.remove();
+                if (!card.contains(div)) div.remove();
             });
             document.querySelectorAll('.ver-historial').forEach(b => {
-                b.style.background = "#ccc";
-                b.style.color = "#333";
+                if (b !== btn) {
+                    b.style.background = "#ccc";
+                    b.style.color = "#333";
+                }
             });
 
             const existente = card.querySelector('.historial-en-card');
             if (existente) {
                 // Si ya está abierto en esta card, solo lo cierra
+                existente.remove();
                 btn.style.background = "#ccc";
                 btn.style.color = "#333";
             } else {
