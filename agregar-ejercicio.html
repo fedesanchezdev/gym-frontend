@@ -240,12 +240,23 @@
             </select>
         </label>
 
+
         <div id="series-fields"></div>
+
+        <!-- NUEVOS CAMPOS -->
+        <label>Descripción:<br>
+            <textarea name="descripcion" id="descripcion" rows="4" cols="40"
+                placeholder="Puedes usar HTML o Markdown"></textarea>
+        </label>
+        <label>URL del video o página:
+            <input type="url" name="url" id="url" placeholder="https://...">
+        </label>
+        <!-- FIN NUEVOS CAMPOS -->
 
         <label>Series generadas:<br>
             <textarea name="series" id="series" rows="4" cols="40" required readonly></textarea>
         </label>
-        <button type="submit">Agregar</button>
+        <button type="submit">Agregar Ejercicio</button>
     </form>
 
     <div id="resultado"></div>
@@ -269,7 +280,7 @@
                 addSerieFields(); // Solo un campo al inicio
                 const addBtn = document.createElement('button');
                 addBtn.type = 'button';
-                addBtn.textContent = 'Agregar Serie';
+                addBtn.textContent = 'Nueva Serie';
                 addBtn.style.marginTop = '8px';
                 addBtn.style.background = '#1976d2';
                 addBtn.style.color = '#fff';
@@ -287,7 +298,7 @@
                         <label>Fallos (separados por guión): <input type="text" id="rt-fallos" placeholder="15-15-10-10" required></label><br>
                         <label>Peso (kg): <input type="number" id="rt-kg" min="0" step="0.1" required></label><br>
                         <label>Incremento (kg): <input type="number" id="rt-inc" min="0" step="0.1" required></label>
-                        <button type="button" onclick="agregarRepeticionesTotales()" style="background:#1976d2;color:#fff;border:none;padding:7px 16px;border-radius:5px;cursor:pointer;margin-top:8px;">Agregar</button>
+                        <button type="button" onclick="agregarRepeticionesTotales()" style="background:#1976d2;color:#fff;border:none;padding:7px 16px;border-radius:5px;cursor:pointer;margin-top:8px;">Insertar Serie Generada</button>
                     </div>
                 `;
             }
@@ -304,7 +315,7 @@
         <label>Kg: <input type="number" min="0" step="0.1" required></label>
         <label>Incremento: <input type="number" min="0" step="0.1" required></label>
         <label>Descanso (segundos): <input type="number" name="descanso" min="10" max="600" value="60" required></label>
-        <button type="button">Agregar</button>
+        <button type="button">Insertar Serie Generada</button>
     `;
             const btn = div.querySelector('button');
             btn.onclick = function () {
@@ -347,7 +358,9 @@
                 grupo_muscular: form.grupo_muscular.value,
                 nombre: form.nombre.value,
                 series: form.series.value,
-                tipo: form.tipo.value
+                tipo: form.tipo.value,
+                descripcion: form.descripcion.value,
+                url: form.url.value
             };
 
             fetch(`${API_URL}/ejercicios`, {

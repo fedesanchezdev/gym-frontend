@@ -46,6 +46,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function crearCardEjercicio(ejercicio) {
+        // --- details y summary para colapsar ---
+        const details = document.createElement('details');
+        details.className = 'ejercicio-details';
+        details.setAttribute('name', 'acordeon-ejercicios');
+
+        const summary = document.createElement('summary');
+        summary.innerHTML = `<strong>${ejercicio.codigo} - ${ejercicio.grupo_muscular} - ${ejercicio.nombre}</strong>`;
+        details.appendChild(summary);
+
         const card = document.createElement('div');
         card.className = 'ejercicio-card';
         card.dataset.id = ejercicio.rutina_id;
@@ -115,9 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const tiempoDescanso = ejercicio.descanso || 60;
 
         card.innerHTML = `
-            <div class="ejercicio-header">
-                <h3>${ejercicio.codigo} - ${ejercicio.grupo_muscular} - ${ejercicio.nombre}</h3>
-            </div>
+            
             <div style="margin:8px 0;">
                 <label>Fecha: 
                     <input type="date" class="fecha-ejercicio" value="${hoy}">
@@ -139,6 +146,73 @@ document.addEventListener('DOMContentLoaded', () => {
                 <button class="eliminar-ejercicio" data-id="${ejercicio.rutina_id}" style="background:#f44336;color:#fff;font-size:1.1em;padding:6px 8px;">Quitar</button>
             </div>
         `;
+
+        // --- Descripción y video en details anidado ---
+        const detailsExtra = document.createElement('details');
+        detailsExtra.className = 'ejercicio-extra';
+        const summaryExtra = document.createElement('summary');
+        summaryExtra.textContent = 'Descripción y Video';
+        detailsExtra.appendChild(summaryExtra);
+
+        // Descripción
+        const descripcion = ejercicio.descripcion ? ejercicio.descripcion : 'Sin descripción';
+        const descDiv = document.createElement('div');
+        descDiv.style.margin = '8px 0';
+        descDiv.innerHTML = descripcion;
+        detailsExtra.appendChild(descDiv);
+
+        // Video (si hay)
+        if (ejercicio.url) {
+            if (
+                ejercicio.url.includes('youtube.com') ||
+                ejercicio.url.includes('youtu.be')
+            ) {
+                // YouTube embed
+                let videoId = '';
+                if (ejercicio.url.includes('youtube.com')) {
+                    const urlParams = new URLSearchParams(ejercicio.url.split('?')[1]);
+                    videoId = urlParams.get('v');
+                } else {
+                    videoId = ejercicio.url.split('/').pop();
+                }
+                if (videoId) {
+                    const videoEmbed = document.createElement('iframe');
+                    videoEmbed.width = "288";
+                    videoEmbed.height = "162";
+                    videoEmbed.src = `https://www.youtube.com/embed/${videoId}`;
+                    videoEmbed.frameBorder = "0";
+                    videoEmbed.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+                    videoEmbed.allowFullscreen = true;
+                    detailsExtra.appendChild(videoEmbed);
+                } else {
+                    // Si no se puede extraer el ID, muestra el link
+                    const link = document.createElement('a');
+                    link.href = ejercicio.url;
+                    link.target = '_blank';
+                    link.rel = 'noopener noreferrer';
+                    link.textContent = 'Ver video en página externa';
+                    link.style.display = 'inline-block';
+                    link.style.margin = '8px 0';
+                    link.style.color = '#1976d2';
+                    link.style.fontWeight = 'bold';
+                    detailsExtra.appendChild(link);
+                }
+            } else {
+                // Para cualquier otro caso, solo muestra el link
+                const link = document.createElement('a');
+                link.href = ejercicio.url;
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+                link.textContent = 'Ver video en página externa';
+                link.style.display = 'inline-block';
+                link.style.margin = '8px 0';
+                link.style.color = '#1976d2';
+                link.style.fontWeight = 'bold';
+                detailsExtra.appendChild(link);
+            }
+        }
+
+        card.appendChild(detailsExtra);
 
         // --- Lógica para agregar/eliminar series dinámicamente y contador para SN ---
         if (esSN) {
@@ -259,7 +333,8 @@ document.addEventListener('DOMContentLoaded', () => {
             enPausa = false;
         });
 
-        return card;
+        details.appendChild(card);
+        return details;
     }
 
     btnAgregar.addEventListener('click', () => {
