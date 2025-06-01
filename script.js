@@ -24,6 +24,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 optionDefault.textContent = 'Selecciona un ejercicio';
                 selectorEjercicios.appendChild(optionDefault);
 
+                // Ordenar por el número al inicio del código (ej: "01", "10", etc.)
+                ejercicios.sort((a, b) => {
+                    const numA = parseInt((a.codigo || '').match(/^\d+/)?.[0] || '0', 10);
+                    const numB = parseInt((b.codigo || '').match(/^\d+/)?.[0] || '0', 10);
+                    return numA - numB;
+                });
+
                 ejercicios.forEach(ejercicio => {
                     const option = document.createElement('option');
                     option.value = ejercicio._id;

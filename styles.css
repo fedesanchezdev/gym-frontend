@@ -1,4 +1,4 @@
-/* ===== ESTILOS GENERALES ===== */
+/* ===== VARIABLES Y RESET ===== */
 :root {
     --color-primario: #1976d2;
     --color-secundario: #43a047;
@@ -16,6 +16,7 @@
     padding: 0;
 }
 
+/* ===== BASE ===== */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
@@ -23,14 +24,6 @@ body {
     background-color: var(--color-fondo);
     padding: 20px;
     min-height: 100vh;
-}
-
-/* ===== ESTRUCTURA PRINCIPAL ===== */
-header {
-    text-align: center;
-    margin-bottom: 30px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid var(--color-borde);
 }
 
 h1,
@@ -41,6 +34,48 @@ h3 {
 
 h1 {
     margin-bottom: 5px;
+}
+
+h3 {
+    text-align: center;
+    color: #f5f5f5;
+    margin-top: 32px;
+}
+
+/* Centrar el nav y el h2 principal */
+nav {
+    text-align: center;
+    margin-bottom: 18px;
+}
+
+nav a {
+    display: inline-block;
+    font-size: 1.1em;
+    padding: 10px 24px;
+    border-radius: 6px;
+    background: #1976d2;
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+
+nav a:hover {
+    background: #125ea9;
+}
+
+h2 {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 24px;
+}
+
+/* ===== ESTRUCTURA PRINCIPAL ===== */
+header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--color-borde);
 }
 
 main {
@@ -82,7 +117,45 @@ footer {
 }
 
 /* ===== FORMULARIOS Y CONTROLES ===== */
-button {
+form,
+#lista-ejercicios {
+    background: #232936;
+    color: #f5f5f5;
+    max-width: 420px;
+    margin: 28px auto 18px auto;
+    padding: 28px 28px 18px 28px;
+    border-radius: 10px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+}
+
+form label {
+    display: block;
+    margin-bottom: 12px;
+    color: #f5f5f5;
+}
+
+form input,
+form select,
+form textarea {
+    font-size: 1em;
+    padding: 7px 8px;
+    border: 1px solid #90caf9;
+    border-radius: 5px;
+    margin-top: 4px;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 8px;
+    background: #181c23;
+    color: #f5f5f5;
+}
+
+form textarea[readonly] {
+    background: #232936;
+    color: #b0b0b0;
+}
+
+button,
+input[type="button"] {
     cursor: pointer;
     transition: all 0.3s ease;
     border: none;
@@ -90,22 +163,64 @@ button {
     padding: 10px 20px;
     font-weight: 500;
     font-size: 1.1em;
+    color: #fff;
 }
 
-input,
-select {
-    padding: 10px;
-    border: 1px solid var(--color-borde);
-    border-radius: 4px;
-    background: #232936;
-    color: var(--color-texto);
-    transition: border-color 0.3s;
+button[type="submit"] {
+    background: #4caf50;
+    color: #fff;
+    border: none;
+    padding: 10px 28px;
+    border-radius: 6px;
+    font-size: 1.1em;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.2s;
+}
+
+button[type="submit"]:hover {
+    background: #388e3c;
 }
 
 input:focus,
-select:focus {
+select:focus,
+textarea:focus {
     outline: none;
     border-color: var(--color-primario);
+}
+
+input.invalido {
+    border-color: var(--color-peligro);
+}
+
+/* ===== AGREGAR EJERCICIO: SERIES ===== */
+.serie-fields {
+    margin-bottom: 10px;
+    background: #181c23;
+    padding: 10px;
+    border-radius: 6px;
+}
+
+.serie-fields label {
+    display: inline-block;
+    width: 48%;
+    margin-bottom: 6px;
+    color: #f5f5f5;
+}
+
+.serie-fields button {
+    margin-top: 8px;
+    background: #1976d2;
+    color: #fff;
+    border: none;
+    padding: 7px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.serie-fields button:hover {
+    background: #0d47a1;
 }
 
 /* ===== SELECTOR DE EJERCICIOS ===== */
@@ -131,7 +246,7 @@ select:focus {
     transform: translateY(-1px);
 }
 
-/* ===== LISTA DE RUTINA ===== */
+/* ===== LISTA DE RUTINA Y EJERCICIOS ===== */
 .contenedor-rutina {
     display: flex;
     flex-direction: column;
@@ -143,6 +258,45 @@ select:focus {
     color: var(--color-texto-secundario);
     font-style: italic;
     padding: 20px;
+}
+
+#lista-ejercicios {
+    max-width: 500px;
+    margin: 0 auto 40px auto;
+    background: #232936;
+    border-radius: 10px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+    padding: 18px 20px;
+    color: #f5f5f5;
+}
+
+.ejercicio-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #333;
+    color: #f5f5f5;
+}
+
+.ejercicio-item:last-child {
+    border-bottom: none;
+}
+
+.ejercicio-item button {
+    background: #f44336;
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 5px;
+    margin-left: 8px;
+    cursor: pointer;
+    font-size: 0.97em;
+    transition: background 0.2s;
+}
+
+.ejercicio-item button:hover {
+    opacity: 0.85;
 }
 
 /* ===== TARJETAS DE EJERCICIO ===== */
@@ -181,7 +335,6 @@ select:focus {
 }
 
 .eliminar-ejercicio {
-    position: absolute;
     right: 0;
     bottom: 0;
 }
@@ -284,32 +437,137 @@ select:focus {
     border-bottom: 1px solid var(--color-borde);
 }
 
-@keyframes slide-in {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
+/* ===== HISTORIAL Y CHARTS ===== */
+.historial-en-card,
+.historial-en-card *,
+.historial-en-card table,
+.historial-en-card th,
+.historial-en-card td {
+    color: var(--color-texto) !important;
+    background: transparent !important;
+    border-color: var(--color-borde) !important;
+}
 
-    to {
-        transform: translateX(0);
-        opacity: 1;
+.historial-en-card canvas {
+    background: transparent !important;
+}
+
+.historial-en-card button {
+    background: var(--color-peligro) !important;
+    color: #fff !important;
+    border: none;
+}
+
+.historial-en-card button:hover {
+    background: #c0392b !important;
+}
+
+/* ===== SERIES SN EN GRILLA ===== */
+#sn-series-list {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 10px;
+}
+
+@media (min-width: 600px) {
+    #sn-series-list {
+        grid-template-columns: repeat(4, 1fr);
     }
 }
 
-@keyframes fade-out {
-    from {
-        opacity: 1;
-    }
-
-    to {
-        opacity: 0;
+@media (min-width: 900px) {
+    #sn-series-list {
+        grid-template-columns: repeat(6, 1fr);
     }
 }
 
-/* ===== DISEÑO RESPONSIVE ===== */
-@media (max-width: 768px) {
-    body {
-        padding: 15px;
+.sn-serie {
+    background: #181c23;
+    border-radius: 6px;
+    padding: 8px 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* ===== ACCORDION (DETAILS) ===== */
+.ejercicio-details {
+    margin-bottom: 18px;
+    border-radius: 8px;
+    border: 1px solid #1976d2;
+    background: #232936;
+    box-shadow: 0 2px 8px #1976d220;
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+}
+
+.ejercicio-details[open] {
+    box-shadow: 0 4px 16px #1976d240;
+    background: #232936;
+}
+
+.ejercicio-details>summary {
+    cursor: pointer;
+    font-size: 1.13em;
+    font-weight: bold;
+    padding: 14px 18px;
+    background: #1976d2;
+    color: #fff;
+    border-bottom: 1px solid #1976d2;
+    outline: none;
+    user-select: none;
+    transition: background 0.2s;
+}
+
+.ejercicio-details[open]>summary {
+    background: #232936;
+}
+
+/* ===== DETAILS ANIDADO DE DESCRIPCIÓN Y VIDEO ===== */
+.ejercicio-extra {
+    margin-top: 12px;
+    border-radius: 6px;
+    border: 1px solid #90caf9;
+    background: #232936;
+    box-shadow: 0 1px 4px #90caf940;
+    overflow: hidden;
+}
+
+.ejercicio-extra>summary {
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 500;
+    padding: 8px 14px;
+    background: #232936;
+    color: #90caf9;
+    border-bottom: 1px solid #90caf9;
+    outline: none;
+    user-select: none;
+}
+
+.ejercicio-extra[open]>summary {
+    background: #232936;
+}
+
+.ejercicio-extra>div,
+.ejercicio-extra>iframe,
+.ejercicio-extra>a {
+    padding: 10px 16px;
+    background: transparent;
+    color: #fff;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 600px) {
+
+    form,
+    #lista-ejercicios {
+        max-width: 98vw;
+        padding: 10px 4vw;
+    }
+
+    .serie-fields label {
+        width: 100%;
     }
 
     .controles-agregar {
@@ -352,9 +610,6 @@ select:focus {
     .controles-serie input {
         width: 100%;
     }
-}
-
-@media (max-width: 480px) {
 
     input,
     select,
@@ -362,166 +617,4 @@ select:focus {
     button {
         font-size: 1.2em;
     }
-
-    .controles-serie input {
-        width: 100%;
-    }
-}
-
-/* ===== ESTADOS Y EFECTOS ===== */
-button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-input.invalido {
-    border-color: var(--color-peligro);
-}
-
-.cargando {
-    position: relative;
-    opacity: 0.7;
-}
-
-.cargando::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 20px;
-    height: 20px;
-    border: 3px solid rgba(255, 255, 255, 0.3);
-    border-radius: 50%;
-    border-top-color: white;
-    animation: spin 1s ease-in-out infinite;
-}
-
-@keyframes spin {
-    to {
-        transform: translate(-50%, -50%) rotate(360deg);
-    }
-}
-
-/* Forzar color claro en todo el historial, incluidas tablas y celdas */
-.historial-en-card,
-.historial-en-card *,
-.historial-en-card table,
-.historial-en-card th,
-.historial-en-card td {
-    color: var(--color-texto) !important;
-    background: transparent !important;
-    border-color: var(--color-borde) !important;
-}
-
-/* Si usas Chart.js, fuerza el fondo del canvas a transparente */
-.historial-en-card canvas {
-    background: transparent !important;
-}
-
-/* Corrige el fondo de los botones dentro del historial */
-.historial-en-card button {
-    background: var(--color-peligro) !important;
-    color: #fff !important;
-    border: none;
-}
-
-.historial-en-card button:hover {
-    background: #c0392b !important;
-}
-
-/* Series SN en grilla de 4 o 6 columnas en pantallas grandes */
-#sn-series-list {
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    gap: 10px;
-}
-
-@media (min-width: 600px) {
-    #sn-series-list {
-        grid-template-columns: repeat(4, 1fr);
-    }
-}
-
-@media (min-width: 900px) {
-    #sn-series-list {
-        grid-template-columns: repeat(6, 1fr);
-    }
-}
-
-.sn-serie {
-    background: #181c23;
-    border-radius: 6px;
-    padding: 8px 6px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-/* Estilo para el acordeón principal */
-.ejercicio-details {
-    margin-bottom: 18px;
-    border-radius: 8px;
-    border: 1px solid #1976d2;
-    background: #232936;
-    box-shadow: 0 2px 8px #1976d220;
-    overflow: hidden;
-    transition: box-shadow 0.2s;
-}
-
-.ejercicio-details[open] {
-    box-shadow: 0 4px 16px #1976d240;
-    background: #232936;
-}
-
-/* Estilo para el summary principal */
-.ejercicio-details>summary {
-    cursor: pointer;
-    font-size: 1.13em;
-    font-weight: bold;
-    padding: 14px 18px;
-    background: #1976d2;
-    color: #fff;
-    border-bottom: 1px solid #1976d2;
-    outline: none;
-    user-select: none;
-    transition: background 0.2s;
-}
-
-.ejercicio-details[open]>summary {
-    background: #232936;
-}
-
-/* Estilo para el details anidado de descripción y video */
-.ejercicio-extra {
-    margin-top: 12px;
-    border-radius: 6px;
-    border: 1px solid #90caf9;
-    background: #232936;
-    box-shadow: 0 1px 4px #90caf940;
-    overflow: hidden;
-}
-
-.ejercicio-extra>summary {
-    cursor: pointer;
-    font-size: 1em;
-    font-weight: 500;
-    padding: 8px 14px;
-    background: #232936;
-    color: #90caf9;
-    border-bottom: 1px solid #90caf9;
-    outline: none;
-    user-select: none;
-}
-
-.ejercicio-extra[open]>summary {
-    background: #232936;
-}
-
-.ejercicio-extra>div,
-.ejercicio-extra>iframe,
-.ejercicio-extra>a {
-    padding: 10px 16px;
-    background: transparent;
-    color: #fff;
 }
