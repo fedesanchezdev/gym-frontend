@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     videoEmbed.width = "288";
                     videoEmbed.height = "162";
                     videoEmbed.src = `https://www.youtube.com/embed/${videoId}`;
-                    videoEmbed.frameBorder = "0";
+                    videoEmbed.setAttribute("frameborder", "0");
                     videoEmbed.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
                     videoEmbed.allowFullscreen = true;
                     detailsExtra.appendChild(videoEmbed);
