@@ -9,35 +9,31 @@ function toggleHistorialModal(ejercicioId) {
     }
 }
 
-
-
 document.addEventListener('DOMContentLoaded', () => {
     const selectorEjercicios = document.getElementById('selector_ejercicios');
     const btnAgregar = document.getElementById('agregar_ejercicio');
     const contenedorRutina = document.getElementById('rutina_hoy');
+    const datalist = document.getElementById('lista_ejercicios');
 
     function cargarEjercicios() {
         fetch(`${API_URL}/ejercicios`)
             .then(response => response.json())
             .then(ejercicios => {
-                selectorEjercicios.innerHTML = '';
-                const optionDefault = document.createElement('option');
-                optionDefault.value = '';
-                optionDefault.textContent = 'Selecciona un ejercicio';
-                selectorEjercicios.appendChild(optionDefault);
-
+                datalist.innerHTML = '';
+                window.ejerciciosPorCodigo = {};
                 // Ordenar por el número al inicio del código (ej: "01", "10", etc.)
                 ejercicios.sort((a, b) => {
                     const numA = parseInt((a.codigo || '').match(/^\d+/)?.[0] || '0', 10);
                     const numB = parseInt((b.codigo || '').match(/^\d+/)?.[0] || '0', 10);
                     return numA - numB;
                 });
-
                 ejercicios.forEach(ejercicio => {
                     const option = document.createElement('option');
-                    option.value = ejercicio._id;
+                    option.value = ejercicio.codigo;
+                    option.label = `${ejercicio.codigo} - ${ejercicio.grupo_muscular} - ${ejercicio.nombre}`;
                     option.textContent = `${ejercicio.codigo} - ${ejercicio.grupo_muscular} - ${ejercicio.nombre}`;
-                    selectorEjercicios.appendChild(option);
+                    datalist.appendChild(option);
+                    window.ejerciciosPorCodigo[ejercicio.codigo] = ejercicio._id;
                 });
             });
     }
@@ -61,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
         details.setAttribute('name', 'acordeon-ejercicios');
 
         const summary = document.createElement('summary');
-        summary.innerHTML = `<strong>${ejercicio.codigo} - ${ejercicio.grupo_muscular} - ${ejercicio.nombre}</strong>`;
+        summary.innerHTML = `${ejercicio.codigo} - ${ejercicio.grupo_muscular} - ${ejercicio.nombre}`;
         details.appendChild(summary);
 
         const card = document.createElement('div');
@@ -347,7 +343,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     btnAgregar.addEventListener('click', () => {
-        const ejercicioId = selectorEjercicios.value;
+        const codigo = selectorEjercicios.value;
+        const ejercicioId = window.ejerciciosPorCodigo ? window.ejerciciosPorCodigo[codigo] : null;
         if (!ejercicioId) return;
 
         fetch(`${API_URL}/rutina_hoy`, {

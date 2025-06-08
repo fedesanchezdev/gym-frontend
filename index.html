@@ -51,10 +51,61 @@
     <main>
         <section class="seccion-agregar">
             <h2>Agregar a Rutina de Hoy</h2>
+            <!-- Rutinas predefinidas en texto -->
+            <section class="seccion-rutinas-predefinidas" style="margin: 32px 0;">
+                <h2>Rutinas Predefinidas</h2>
+                <details name="rutinas-semana" open>
+                    <summary><strong>Semana 1</strong></summary>
+                    <details name="rutinas-diarias">
+                        <summary style="margin-left:15px;">Día 1</summary>
+                        <div style="font-family:monospace;">009-053-085-025-005-093-033-113-037-213</div>
+                    </details>
+                    <details name="rutinas-diarias">
+                        <summary style="margin-left:15px;">Día 2</summary>
+                        <div style="font-family:monospace;">177-249-173-133-181-137-197-149-205-261</div>
+                    </details>
+                    <details name="rutinas-diarias">
+                        <summary style="margin-left:15px;">Día 3</summary>
+                        <div style="font-family:monospace;">073-089-101-117-221-237-241-245</div>
+                    </details>
+                </details>
+                <details name="rutinas-semana">
+                    <summary><strong>Semana 2</strong></summary>
+                    <details name="rutinas-diarias">
+                        <summary style="margin-left:15px;">Día 1</summary>
+                        <div style="font-family:monospace;">013-021-001-041-045-057-065-109-113-213</div>
+                    </details>
+                    <details name="rutinas-diarias">
+                        <summary style="margin-left:15px;">Día 2</summary>
+                        <div style="font-family:monospace;">177-185-253-141-169-229-189-157-209-161</div>
+                    </details>
+                    <details name="rutinas-diarias">
+                        <summary style="margin-left:15px;">Día 3</summary>
+                        <div style="font-family:monospace;">077-105-101-117-225-237-241-245</div>
+                    </details>
+                </details>
+                <details name="rutinas-semana">
+                    <summary><strong>Semana 3</strong></summary>
+                    <details name="rutinas-diarias">
+                        <summary style="margin-left:15px;">Día 1</summary>
+                        <div style="font-family:monospace;">017-025-061-069-233-097-049-117-037-217</div>
+                    </details>
+                    <details name="rutinas-diarias">
+                        <summary style="margin-left:15px;">Día 2</summary>
+                        <div style="font-family:monospace;">257-177-133-173-137-193-161-201-165-205</div>
+                    </details>
+                    <details name="rutinas-diarias">
+                        <summary style="margin-left:15px;">Día 3</summary>
+                        <div style="font-family:monospace;">081-105-101-117-225-237-241-245</div>
+                    </details>
+                </details>
+            </section>
             <div class="controles-agregar">
-                <select id="selector_ejercicios">
-                    <option value="">Cargando ejercicios...</option>
-                </select>
+                <input list="lista_ejercicios" id="selector_ejercicios"
+                    placeholder="Buscar ejercicio por número o nombre">
+                <datalist id="lista_ejercicios">
+                    <!-- Opciones generadas por JS -->
+                </datalist>
                 <button id="agregar_ejercicio" style="font-size:1.15em;">Agregar a la Rutina</button>
             </div>
         </section>
