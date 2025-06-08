@@ -18,15 +18,10 @@ function crearHistorialEnCard(card, mensaje, tipo = 'peso', onTipoChange) {
                     <option value="fallo">Fallo</option>
                 </select>
             </label>
-            <button class="cerrar-historial-en-card" style="float:right;">&times;</button>
         </div>
         <canvas class="chartHistorialEnCard"></canvas>
     `;
     card.appendChild(contenedor);
-
-    // Cerrar historial
-    const btnCerrar = contenedor.querySelector('.cerrar-historial-en-card');
-    if (btnCerrar) btnCerrar.onclick = () => contenedor.remove();
 
     // Cambio de tipo
     if (!mensaje && onTipoChange) {
@@ -37,6 +32,12 @@ function crearHistorialEnCard(card, mensaje, tipo = 'peso', onTipoChange) {
         });
     }
     return contenedor;
+}
+
+function formatearFechaDDMMYY(fechaStr) {
+    // fechaStr esperado: "YYYY-MM-DD"
+    const [y, m, d] = fechaStr.split('-');
+    return `${d}-${m}-${y.slice(2)}`;
 }
 
 function mostrarGraficoHistorialEnCard(ejercicioId, card, tipo = 'peso') {
@@ -52,26 +53,55 @@ function mostrarGraficoHistorialEnCard(ejercicioId, card, tipo = 'peso') {
                 mostrarGraficoHistorialEnCard(ejercicioId, card, nuevoTipo);
             });
 
-            // --- NUEVO: Lista de historial con botón eliminar ---
+            // --- NUEVO: Lista de historial con botón eliminar y agrupación ---
             const lista = document.createElement('ul');
             lista.style.listStyle = 'none';
             lista.style.padding = '0';
-            data.forEach(item => {
+
+            const historialOrdenado = [...data].reverse();
+            const ultimas = historialOrdenado.slice(0, 4);
+            const antiguas = historialOrdenado.slice(4);
+
+            // Mostrar las últimas 4 entradas directamente
+            ultimas.forEach(item => {
                 const li = document.createElement('li');
                 li.style.marginBottom = '8px';
                 li.innerHTML = `
-                    <strong>${item.fecha}</strong>
-                    <button class="eliminar-entrada-historial" data-id="${item._id}" style="margin-left:10px;background:#f44336;color:#fff;border:none;padding:2px 10px;border-radius:4px;cursor:pointer;">Eliminar</button>
-                    <br>
-                    <pre style="background:#f7f7f7;padding:4px 8px;border-radius:4px;">${item.series_string}</pre>
-                `;
+        <strong>${formatearFechaDDMMYY(item.fecha)}</strong>
+        <button class="eliminar-entrada-historial" data-id="${item._id}" style="margin-left:10px;background:#f44336;color:#fff;border:none;padding:2px 10px;border-radius:4px;cursor:pointer;">Eliminar</button>
+        <br>
+        <pre style="background:#f7f7f7;padding:4px 8px;border-radius:4px;">${item.series_string}</pre>
+    `;
                 lista.appendChild(li);
             });
+
+            // Si hay más antiguas, agrúpalas en un <details>
+            if (antiguas.length > 0) {
+                const details = document.createElement('details');
+                const summary = document.createElement('summary');
+                summary.textContent = `Ver ${antiguas.length} entradas más antiguas`;
+                details.appendChild(summary);
+
+                antiguas.forEach(item => {
+                    const li = document.createElement('li');
+                    li.style.marginBottom = '8px';
+                    li.innerHTML = `
+            <strong>${formatearFechaDDMMYY(item.fecha)}</strong>
+            <button class="eliminar-entrada-historial" data-id="${item._id}" style="margin-left:10px;background:#f44336;color:#fff;border:none;padding:2px 10px;border-radius:4px;cursor:pointer;">Eliminar</button>
+            <br>
+            <pre style="background:#f7f7f7;padding:4px 8px;border-radius:4px;">${item.series_string}</pre>
+        `;
+                    details.appendChild(li);
+                });
+
+                lista.appendChild(details);
+            }
+
             contenedor.appendChild(lista);
             // --- FIN NUEVO ---
 
             const ctx = contenedor.querySelector('.chartHistorialEnCard').getContext('2d');
-            const fechas = data.map(item => item.fecha);
+            const fechas = data.map(item => formatearFechaDDMMYY(item.fecha));
             const seriesPorIndice = {};
 
             data.forEach(item => {

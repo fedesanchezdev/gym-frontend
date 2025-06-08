@@ -574,6 +574,15 @@ input.invalido {
     background: #125ea9;
 }
 
+
+/* Estilos para selects y options en historial */
+.historial-en-card select,
+.historial-en-card option {
+    background: #181c23;
+    color: #9c9999;
+    border: 1px solid #1976d2;
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 600px) {
 

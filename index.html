@@ -99,6 +99,29 @@
             navigator.serviceWorker.register('sw.js');
         }
     </script>
+    <script>
+        // Solo carga la rutina del día tal como viene del backend
+        function cargarRutinaHoy() {
+            fetch('https://gym-backend-oasf.onrender.com/rutina_hoy')
+                .then(res => res.json())
+                .then(rutina => {
+                    const contenedor = document.getElementById('rutina_hoy');
+                    contenedor.innerHTML = '';
+                    if (!rutina.length) {
+                        contenedor.innerHTML = '<p class="mensaje-vacio">No hay ejercicios en tu rutina hoy. ¡Agrega algunos!</p>';
+                        return;
+                    }
+                    rutina.forEach(ej => {
+                        const div = document.createElement('div');
+                        div.className = 'ejercicio-item';
+                        div.innerHTML = `<span><strong>${ej.codigo}</strong> - ${ej.nombre} (${ej.grupo_muscular})</span>`;
+                        contenedor.appendChild(div);
+                    });
+                });
+        }
+        // Llama a cargarRutinaHoy() al iniciar la página
+        cargarRutinaHoy();
+    </script>
 </body>
 
 </html>

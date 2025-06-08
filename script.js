@@ -9,6 +9,8 @@ function toggleHistorialModal(ejercicioId) {
     }
 }
 
+
+
 document.addEventListener('DOMContentLoaded', () => {
     const selectorEjercicios = document.getElementById('selector_ejercicios');
     const btnAgregar = document.getElementById('agregar_ejercicio');
@@ -150,7 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <button class="guardar-todas-series" style="background:#4caf50;color:#fff;font-size:1.1em;padding:6px 8px;" data-id="${ejercicio.rutina_id}">Guardar</button>
                     <button class="ver-historial" data-id="${ejercicio._id}" style="background:#ccc;color:#333;font-size:1.1em;padding:6px 8px;">Historial</button>
                 </div>
-                <button class="eliminar-ejercicio" data-id="${ejercicio.rutina_id}" style="background:#f44336;color:#fff;font-size:1.1em;padding:6px 8px;">Quitar</button>
+                <button class="eliminar-ejercicio" data-id="${ejercicio.rutina_id}" style="background:#ffa726;color:#fff;font-size:1.1em;padding:6px 8px;">Quitar</button>
             </div>
         `;
 
