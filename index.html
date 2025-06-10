@@ -214,6 +214,8 @@
             fetch('https://gym-backend-oasf.onrender.com/rutinas_predefinidas_completadas')
                 .then(res => res.json())
                 .then(completadas => {
+                    // Asegura que completadas sea un array
+                    if (!Array.isArray(completadas)) completadas = [];
                     document.querySelectorAll('.chk-rutina-dia').forEach(chk => {
                         const semana = Number(chk.dataset.semana);
                         const dia = Number(chk.dataset.dia);
