@@ -55,47 +55,83 @@
             <section class="seccion-rutinas-predefinidas" style="margin: 32px 0;">
                 <h2>Rutinas Predefinidas</h2>
                 <details name="rutinas-semana">
-                    <summary><strong>Semana 1</strong></summary>
-                    <details name="rutinas-diarias">
-                        <summary style="margin-left:15px;">Día 1</summary>
+                    <summary style="margin-left:15px;"><strong>Semana 1</strong></summary>
+                    <details>
+                        <summary style="margin-left:15px;">
+                            Día 1
+                            <input type="checkbox" class="chk-rutina-dia" data-semana="1" data-dia="1"
+                                style="margin-left:10px;">
+                        </summary>
                         <div style="font-family:monospace;">009-053-085-025-005-093-033-113-037-213</div>
                     </details>
-                    <details name="rutinas-diarias">
-                        <summary style="margin-left:15px;">Día 2</summary>
+                    <details>
+                        <summary style="margin-left:15px;">
+                            Día 2
+                            <input type="checkbox" class="chk-rutina-dia" data-semana="1" data-dia="2"
+                                style="margin-left:10px;">
+                        </summary>
                         <div style="font-family:monospace;">177-249-173-133-181-137-197-149-205-261</div>
                     </details>
-                    <details name="rutinas-diarias">
-                        <summary style="margin-left:15px;">Día 3</summary>
+                    <details>
+                        <summary style="margin-left:15px;">
+                            Día 3
+                            <input type="checkbox" class="chk-rutina-dia" data-semana="1" data-dia="3"
+                                style="margin-left:10px;">
+                        </summary>
                         <div style="font-family:monospace;">073-089-101-117-221-237-241-245</div>
                     </details>
                 </details>
                 <details name="rutinas-semana">
-                    <summary><strong>Semana 2</strong></summary>
-                    <details name="rutinas-diarias">
-                        <summary style="margin-left:15px;">Día 1</summary>
+                    <summary style="margin-left:15px;"><strong>Semana 2</strong></summary>
+                    <details>
+                        <summary style="margin-left:15px;">
+                            Día 1
+                            <input type="checkbox" class="chk-rutina-dia" data-semana="2" data-dia="1"
+                                style="margin-left:10px;">
+                        </summary>
                         <div style="font-family:monospace;">013-021-001-041-045-057-065-109-113-213</div>
                     </details>
-                    <details name="rutinas-diarias">
-                        <summary style="margin-left:15px;">Día 2</summary>
+                    <details>
+                        <summary style="margin-left:15px;">
+                            Día 2
+                            <input type="checkbox" class="chk-rutina-dia" data-semana="2" data-dia="2"
+                                style="margin-left:10px;">
+                        </summary>
                         <div style="font-family:monospace;">177-185-253-141-169-229-189-157-209-161</div>
                     </details>
-                    <details name="rutinas-diarias">
-                        <summary style="margin-left:15px;">Día 3</summary>
+                    <details>
+                        <summary style="margin-left:15px;">
+                            Día 3
+                            <input type="checkbox" class="chk-rutina-dia" data-semana="2" data-dia="3"
+                                style="margin-left:10px;">
+                        </summary>
                         <div style="font-family:monospace;">077-105-101-117-225-237-241-245</div>
                     </details>
                 </details>
                 <details name="rutinas-semana">
-                    <summary><strong>Semana 3</strong></summary>
-                    <details name="rutinas-diarias">
-                        <summary style="margin-left:15px;">Día 1</summary>
+                    <summary style="margin-left:15px;"><strong>Semana 3</strong></summary>
+                    <details>
+                        <summary style="margin-left:15px;">
+                            Día 1
+                            <input type="checkbox" class="chk-rutina-dia" data-semana="3" data-dia="1"
+                                style="margin-left:10px;">
+                        </summary>
                         <div style="font-family:monospace;">017-025-061-069-233-097-049-117-037-217</div>
                     </details>
-                    <details name="rutinas-diarias">
-                        <summary style="margin-left:15px;">Día 2</summary>
+                    <details>
+                        <summary style="margin-left:15px;">
+                            Día 2
+                            <input type="checkbox" class="chk-rutina-dia" data-semana="3" data-dia="2"
+                                style="margin-left:10px;">
+                        </summary>
                         <div style="font-family:monospace;">257-177-133-173-137-193-161-201-165-205</div>
                     </details>
-                    <details name="rutinas-diarias">
-                        <summary style="margin-left:15px;">Día 3</summary>
+                    <details>
+                        <summary style="margin-left:15px;">
+                            Día 3
+                            <input type="checkbox" class="chk-rutina-dia" data-semana="3" data-dia="3"
+                                style="margin-left:10px;">
+                        </summary>
                         <div style="font-family:monospace;">081-105-101-117-225-237-241-245</div>
                     </details>
                 </details>
@@ -172,6 +208,41 @@
         }
         // Llama a cargarRutinaHoy() al iniciar la página
         cargarRutinaHoy();
+    </script>
+    <script>
+        function syncRutinasPredefinidasCheckboxes() {
+            fetch('https://gym-backend-oasf.onrender.com/rutinas_predefinidas_completadas')
+                .then(res => res.json())
+                .then(completadas => {
+                    document.querySelectorAll('.chk-rutina-dia').forEach(chk => {
+                        const semana = Number(chk.dataset.semana);
+                        const dia = Number(chk.dataset.dia);
+                        const found = completadas.find(r => r.semana === semana && r.dia === dia);
+                        chk.checked = !!found;
+                    });
+                });
+        }
+
+        function guardarRutinasPredefinidasCheckboxes() {
+            const completadas = [];
+            document.querySelectorAll('.chk-rutina-dia').forEach(chk => {
+                if (chk.checked) {
+                    completadas.push({ semana: Number(chk.dataset.semana), dia: Number(chk.dataset.dia) });
+                }
+            });
+            fetch('https://gym-backend-oasf.onrender.com/rutinas_predefinidas_completadas', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ completadas })
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            syncRutinasPredefinidasCheckboxes();
+            document.querySelectorAll('.chk-rutina-dia').forEach(chk => {
+                chk.addEventListener('change', guardarRutinasPredefinidasCheckboxes);
+            });
+        });
     </script>
 </body>
 
