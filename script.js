@@ -1,5 +1,15 @@
 const API_URL = 'https://gym-backend-oasf.onrender.com';
 
+// Spinner control
+function mostrarSpinner() {
+    const spinner = document.getElementById('spinner-cargando');
+    if (spinner) spinner.style.display = 'flex';
+}
+function ocultarSpinner() {
+    const spinner = document.getElementById('spinner-cargando');
+    if (spinner) spinner.style.display = 'none';
+}
+
 function toggleHistorialModal(ejercicioId) {
     const modal = document.getElementById('modalHistorial');
     if (modal) {
@@ -16,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const datalist = document.getElementById('lista_ejercicios');
 
     function cargarEjercicios() {
+        mostrarSpinner();
         fetch(`${API_URL}/ejercicios`)
             .then(response => response.json())
             .then(ejercicios => {
@@ -35,10 +46,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     datalist.appendChild(option);
                     window.ejerciciosPorCodigo[ejercicio.codigo] = ejercicio._id;
                 });
-            });
+                ocultarSpinner();
+            })
+            .catch(() => ocultarSpinner());
     }
 
     function cargarRutinaHoy() {
+        mostrarSpinner();
         fetch(`${API_URL}/rutina_hoy`)
             .then(response => response.json())
             .then(rutina => {
@@ -47,7 +61,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     const ejercicio = crearCardEjercicio(item);
                     contenedorRutina.appendChild(ejercicio);
                 });
-            });
+                ocultarSpinner();
+            })
+            .catch(() => ocultarSpinner());
     }
 
     function crearCardEjercicio(ejercicio) {
@@ -347,6 +363,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const ejercicioId = window.ejerciciosPorCodigo ? window.ejerciciosPorCodigo[codigo] : null;
         if (!ejercicioId) return;
 
+        mostrarSpinner();
         fetch(`${API_URL}/rutina_hoy`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -356,7 +373,9 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(() => {
                 cargarRutinaHoy();
                 selectorEjercicios.value = '';
-            });
+                ocultarSpinner();
+            })
+            .catch(() => ocultarSpinner());
     });
 
     contenedorRutina.addEventListener('click', (e) => {
@@ -364,8 +383,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target.classList.contains('eliminar-ejercicio')) {
             const rutinaId = e.target.dataset.id;
             if (confirm('¿Seguro que quieres quitar este ejercicio de la rutina de hoy?')) {
+                mostrarSpinner();
                 fetch(`${API_URL}/rutina_hoy/${rutinaId}`, { method: 'DELETE' })
-                    .then(() => cargarRutinaHoy());
+                    .then(() => {
+                        cargarRutinaHoy();
+                        ocultarSpinner();
+                    })
+                    .catch(() => ocultarSpinner());
             }
         }
 
@@ -405,6 +429,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const fechaInput = cardEjercicio.querySelector('.fecha-ejercicio');
             const fechaSeleccionada = fechaInput ? fechaInput.value : undefined;
 
+            mostrarSpinner();
             fetch(`${API_URL}/ejercicios/serie`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
@@ -438,7 +463,9 @@ document.addEventListener('DOMContentLoaded', () => {
                             e.target.textContent = 'Guardar';
                         }, 6000);
                     }
-                });
+                    ocultarSpinner();
+                })
+                .catch(() => ocultarSpinner());
         }
 
         // Ver historial (toggle en la card)

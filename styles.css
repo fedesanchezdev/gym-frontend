@@ -509,7 +509,7 @@ input.invalido {
 .ejercicio-details>summary {
     cursor: pointer;
     font-size: 1.13em;
-    font-weight: bold;
+    font-weight: normal;
     padding: 14px 18px;
     background: #1976d2;
     color: #fff;
@@ -520,7 +520,7 @@ input.invalido {
 }
 
 .ejercicio-details[open]>summary {
-    background: #232936;
+    background: #177e31;
 }
 
 /* ===== DETAILS ANIDADO DE DESCRIPCIÓN Y VIDEO ===== */
@@ -581,6 +581,16 @@ input.invalido {
     background: #181c23;
     color: #9c9999;
     border: 1px solid #1976d2;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 /* ===== RESPONSIVE ===== */
