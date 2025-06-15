@@ -67,7 +67,6 @@ function mostrarGraficoHistorialEnCard(ejercicioId, card, tipo = 'peso') {
             lista.style.listStyle = 'none';
             lista.style.padding = '0';
 
-            const historialOrdenado = [...data].reverse();
             const ultimas = historialOrdenado.slice(0, 4);
             const antiguas = historialOrdenado.slice(4);
 
