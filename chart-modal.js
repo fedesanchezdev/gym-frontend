@@ -53,9 +53,9 @@ function mostrarGraficoHistorialEnCard(ejercicioId, card, tipo = 'peso') {
             data.sort((a, b) => {
                 const [da, ma, ya] = a.fecha.split('-');
                 const [db, mb, yb] = b.fecha.split('-');
-                const fa = `${ya}-${ma.padStart(2, '0')}-${da.padStart(2, '0')}`;
-                const fb = `${yb}-${mb.padStart(2, '0')}-${db.padStart(2, '0')}`;
-                return fb.localeCompare(fa);
+                const dateA = new Date(`${ya}-${ma.padStart(2, '0')}-${da.padStart(2, '0')}`);
+                const dateB = new Date(`${yb}-${mb.padStart(2, '0')}-${db.padStart(2, '0')}`);
+                return dateB - dateA;
             });
 
             const contenedor = crearHistorialEnCard(card, null, tipo, (nuevoTipo) => {
@@ -67,8 +67,8 @@ function mostrarGraficoHistorialEnCard(ejercicioId, card, tipo = 'peso') {
             lista.style.listStyle = 'none';
             lista.style.padding = '0';
 
-            const ultimas = historialOrdenado.slice(0, 4);
-            const antiguas = historialOrdenado.slice(4);
+            const ultimas = data.slice(0, 4);
+            const antiguas = data.slice(4);
 
             // Mostrar las últimas 4 entradas directamente
             ultimas.forEach(item => {
