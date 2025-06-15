@@ -500,7 +500,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 btn.style.color = "#333";
             } else {
                 // Aquí deberías tener tu función para mostrar el historial en la card
-                // mostrarGraficoHistorialEnCard(btn.dataset.id, card);
+                mostrarGraficoHistorialEnCard(btn.dataset.id, card);
                 btn.style.background = "#4caf50";
                 btn.style.color = "#fff";
             }

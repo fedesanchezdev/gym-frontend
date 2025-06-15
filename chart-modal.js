@@ -165,3 +165,5 @@ document.addEventListener('click', function (e) {
         }
     }
 });
+
+window.mostrarGraficoHistorialEnCard = mostrarGraficoHistorialEnCard;
