@@ -37,7 +37,7 @@ function crearHistorialEnCard(card, mensaje, tipo = 'peso', onTipoChange) {
 function formatearFechaDDMMYY(fechaStr) {
     // fechaStr esperado: "YYYY-MM-DD"
     const [y, m, d] = fechaStr.split('-');
-    return `${d}-${m}-${y.slice(2)}`;
+    return `${d}-${m}-${y}`;
 }
 
 function mostrarGraficoHistorialEnCard(ejercicioId, card, tipo = 'peso') {
@@ -48,6 +48,15 @@ function mostrarGraficoHistorialEnCard(ejercicioId, card, tipo = 'peso') {
                 crearHistorialEnCard(card, '⚠️ No hay historial disponible para este ejercicio.');
                 return;
             }
+
+            // Ordena por fecha descendente (más reciente primero)
+            data.sort((a, b) => {
+                const [da, ma, ya] = a.fecha.split('-');
+                const [db, mb, yb] = b.fecha.split('-');
+                const fa = `${ya}-${ma.padStart(2, '0')}-${da.padStart(2, '0')}`;
+                const fb = `${yb}-${mb.padStart(2, '0')}-${db.padStart(2, '0')}`;
+                return fb.localeCompare(fa);
+            });
 
             const contenedor = crearHistorialEnCard(card, null, tipo, (nuevoTipo) => {
                 mostrarGraficoHistorialEnCard(ejercicioId, card, nuevoTipo);
