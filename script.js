@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
         details.setAttribute('name', 'acordeon-ejercicios');
 
         const summary = document.createElement('summary');
-        summary.innerHTML = `${ejercicio.codigo} - ${ejercicio.grupo_muscular} <br> <span class="nombre-ejercicio" style="padding-left:18px">${ejercicio.nombre}</span>`;
+        summary.innerHTML = `${ejercicio.codigo} - ${ejercicio.grupo_muscular} - <span class="nombre-ejercicio">${ejercicio.nombre}</span>`;
         details.appendChild(summary);
 
         const card = document.createElement('div');
@@ -156,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let botonesTiempos = '';
         tiemposPredefinidos.forEach(t => {
-            botonesTiempos += `<button type="button" class="btn-tiempo-predefinido" data-tiempo="${t.value}" style="margin-right:6px;margin-bottom:4px;background:#43a047;color:#fff;border:none;border-radius:4px;padding:3px 7px;cursor:pointer;">${t.label}</button>`;
+            botonesTiempos += `<button type="button" class="btn-tiempo-predefinido" data-tiempo="${t.value}" style="margin-right:6px;margin-bottom:4px;background:#43a047;color:#fff;border:none;border-radius:4px;padding:6px 14px;cursor:pointer;">${t.label}</button>`;
         });
 
         card.innerHTML = `
@@ -171,6 +171,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 <button class="pausar-descanso" style="background:#ffa726;color:#fff;padding:6px 18px;border-radius:5px;display:none;">⏸️</button>
                 <button class="reiniciar-descanso" style="background:#e74c3c;color:#fff;padding:6px 18px;border-radius:5px;display:none;">⏹️</button>
                 <span class="timer-text" style="margin-left:14px;font-weight:bold;color:#43a047;display:none;font-size:2em;">00:00</span>
+            </div>
+            <div class="comentario-ejercicio" style="margin-top:14px;">
+                <label for="comentario-${ejercicio.rutina_id}" style="font-weight:bold;display:block;margin-bottom:4px;">Comentario:</label>
+                <textarea id="comentario-${ejercicio.rutina_id}" rows="2" style="width:100%;resize:vertical;" placeholder="Escribe aquí un comentario sobre este ejercicio..."></textarea>
             </div>
             <div class="acciones-ejercicio" style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;">
                 <div>
@@ -239,6 +243,19 @@ document.addEventListener('DOMContentLoaded', () => {
             btnPausa.textContent = '⏸️';
             btnPausa.title = 'Pausar';
             enPausa = false;
+        });
+
+        // --- Guardar comentario al salir del textarea ---
+        const textareaComentario = card.querySelector(`#comentario-${ejercicio.rutina_id}`);
+        if (ejercicio.comentario) {
+            textareaComentario.value = ejercicio.comentario;
+        }
+        textareaComentario.addEventListener('blur', function () {
+            fetch(`${API_URL}/rutina_hoy/${ejercicio.rutina_id}/comentario`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ comentario: textareaComentario.value })
+            });
         });
 
         // --- Descripción y video en details anidado ---
