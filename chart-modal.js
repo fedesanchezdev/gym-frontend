@@ -1,4 +1,4 @@
-function crearHistorialEnCard(card, mensaje, tipo = 'peso', onTipoChange) {
+function crearHistorialEnCard(card, mensaje) {
     // Elimina historial anterior en la card si existe
     const anterior = card.querySelector('.historial-en-card');
     if (anterior) anterior.remove();
@@ -10,37 +10,28 @@ function crearHistorialEnCard(card, mensaje, tipo = 'peso', onTipoChange) {
     contenedor.style.margin = '10px 0';
     contenedor.style.padding = '10px';
 
-    contenedor.innerHTML = mensaje ? `<p style='text-align:center;'>${mensaje}</p>` : `
-        <div style="text-align:center;margin-bottom:10px;">
-            <label>Ver: 
-                <select class="tipoDatoHistorial">
-                    <option value="peso">Peso</option>
-                    <option value="fallo">Fallo</option>
-                </select>
-            </label>
-        </div>
-        <canvas class="chartHistorialEnCard"></canvas>
-    `;
+    contenedor.innerHTML = mensaje ? `<p style='text-align:center;'>${mensaje}</p>` : '';
     card.appendChild(contenedor);
 
-    // Cambio de tipo
-    if (!mensaje && onTipoChange) {
-        const selector = contenedor.querySelector('.tipoDatoHistorial');
-        selector.value = tipo;
-        selector.addEventListener('change', (e) => {
-            onTipoChange(e.target.value);
-        });
-    }
     return contenedor;
 }
 
 function formatearFechaDDMMYY(fechaStr) {
-    // fechaStr esperado: "YYYY-MM-DD"
-    const [y, m, d] = fechaStr.split('-');
-    return `${d}-${m}-${y}`;
+    // fechaStr esperado: "YYYY-MM-DD" o "DD-MM-YYYY"
+    if (fechaStr.includes('-')) {
+        const partes = fechaStr.split('-');
+        if (partes[0].length === 4) {
+            // "YYYY-MM-DD" -> "DD-MM-YYYY"
+            return `${partes[2]}-${partes[1]}-${partes[0]}`;
+        } else {
+            // "DD-MM-YYYY" -> igual
+            return fechaStr;
+        }
+    }
+    return fechaStr;
 }
 
-function mostrarGraficoHistorialEnCard(ejercicioId, card, tipo = 'peso') {
+function mostrarGraficoHistorialEnCard(ejercicioId, card) {
     fetch(`${API_URL}/historial/${ejercicioId}`)
         .then(res => res.json())
         .then(data => {
@@ -58,11 +49,9 @@ function mostrarGraficoHistorialEnCard(ejercicioId, card, tipo = 'peso') {
                 return dateB - dateA;
             });
 
-            const contenedor = crearHistorialEnCard(card, null, tipo, (nuevoTipo) => {
-                mostrarGraficoHistorialEnCard(ejercicioId, card, nuevoTipo);
-            });
+            const contenedor = crearHistorialEnCard(card, null);
 
-            // --- NUEVO: Lista de historial con botón eliminar y agrupación ---
+            // --- Lista de historial con botón eliminar y agrupación ---
             const lista = document.createElement('ul');
             lista.style.listStyle = 'none';
             lista.style.padding = '0';
@@ -106,46 +95,6 @@ function mostrarGraficoHistorialEnCard(ejercicioId, card, tipo = 'peso') {
             }
 
             contenedor.appendChild(lista);
-            // --- FIN NUEVO ---
-
-            const ctx = contenedor.querySelector('.chartHistorialEnCard').getContext('2d');
-            const fechas = data.map(item => formatearFechaDDMMYY(item.fecha));
-            const seriesPorIndice = {};
-
-            data.forEach(item => {
-                item.series_string.split('\n').forEach((serie, idx) => {
-                    const partes = serie.split(' ');
-                    const fallo = parseInt(partes[2]?.substring(1)) || 0;
-                    const peso = parseFloat(partes[3]?.substring(1)) || 0;
-                    if (!seriesPorIndice[idx]) {
-                        seriesPorIndice[idx] = { fallo: [], peso: [] };
-                    }
-                    seriesPorIndice[idx].fallo.push(fallo);
-                    seriesPorIndice[idx].peso.push(peso);
-                });
-            });
-
-            const datasets = [];
-            Object.entries(seriesPorIndice).forEach(([idx, datos], i) => {
-                datasets.push({
-                    label: `Serie ${+idx + 1}`,
-                    data: datos[tipo],
-                    backgroundColor: `hsl(${i * 60}, 70%, 60%)`
-                });
-            });
-
-            new Chart(ctx, {
-                type: 'bar',
-                data: { labels: fechas, datasets },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { position: 'top' } },
-                    scales: {
-                        y: { beginAtZero: true, title: { display: true, text: tipo === 'peso' ? 'Peso (kg)' : 'Fallo' } },
-                        x: { title: { display: true, text: 'Fecha' } }
-                    }
-                }
-            });
         });
 }
 
