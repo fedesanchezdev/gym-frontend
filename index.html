@@ -10,7 +10,6 @@
     <meta name="theme-color" content="#1976d2">
     <!-- Para iOS -->
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <link rel="apple-touch-icon" href="icon-192.png">
     <!-- 📊 Chart.js CDN -->
@@ -62,7 +61,7 @@
                 <h2>Rutinas Predefinidas</h2>
                 <details name="rutinas-semana">
                     <summary style="margin-left:15px;"><strong>Semana 1</strong></summary>
-                    <details name="dias">
+                    <details>
                         <summary style="margin-left:15px;">
                             Día 1
                             <input type="checkbox" class="chk-rutina-dia" data-semana="1" data-dia="1"
@@ -70,7 +69,7 @@
                         </summary>
                         <div style="font-family:monospace;">009-053-085-025-005-093-033-113-037-213</div>
                     </details>
-                    <details name="dias">
+                    <details>
                         <summary style="margin-left:15px;">
                             Día 2
                             <input type="checkbox" class="chk-rutina-dia" data-semana="1" data-dia="2"
@@ -78,7 +77,7 @@
                         </summary>
                         <div style="font-family:monospace;">177-249-173-133-181-137-197-149-205-261</div>
                     </details>
-                    <details name="dias">
+                    <details>
                         <summary style="margin-left:15px;">
                             Día 3
                             <input type="checkbox" class="chk-rutina-dia" data-semana="1" data-dia="3"
@@ -89,7 +88,7 @@
                 </details>
                 <details name="rutinas-semana">
                     <summary style="margin-left:15px;"><strong>Semana 2</strong></summary>
-                    <details name="dias">
+                    <details>
                         <summary style="margin-left:15px;">
                             Día 1
                             <input type="checkbox" class="chk-rutina-dia" data-semana="2" data-dia="1"
@@ -97,7 +96,7 @@
                         </summary>
                         <div style="font-family:monospace;">013-021-001-041-045-057-065-109-113-213</div>
                     </details>
-                    <details name="dias">
+                    <details>
                         <summary style="margin-left:15px;">
                             Día 2
                             <input type="checkbox" class="chk-rutina-dia" data-semana="2" data-dia="2"
@@ -105,7 +104,7 @@
                         </summary>
                         <div style="font-family:monospace;">177-185-253-141-169-229-189-157-209-161</div>
                     </details>
-                    <details name="dias">
+                    <details>
                         <summary style="margin-left:15px;">
                             Día 3
                             <input type="checkbox" class="chk-rutina-dia" data-semana="2" data-dia="3"
@@ -116,7 +115,7 @@
                 </details>
                 <details name="rutinas-semana">
                     <summary style="margin-left:15px;"><strong>Semana 3</strong></summary>
-                    <details name="dias">
+                    <details>
                         <summary style="margin-left:15px;">
                             Día 1
                             <input type="checkbox" class="chk-rutina-dia" data-semana="3" data-dia="1"
@@ -124,7 +123,7 @@
                         </summary>
                         <div style="font-family:monospace;">017-025-061-069-233-097-049-117-037-217</div>
                     </details>
-                    <details name="dias">
+                    <details>
                         <summary style="margin-left:15px;">
                             Día 2
                             <input type="checkbox" class="chk-rutina-dia" data-semana="3" data-dia="2"
@@ -132,7 +131,7 @@
                         </summary>
                         <div style="font-family:monospace;">257-177-133-173-137-193-161-201-165-205</div>
                     </details>
-                    <details name="dias">
+                    <details>
                         <summary style="margin-left:15px;">
                             Día 3
                             <input type="checkbox" class="chk-rutina-dia" data-semana="3" data-dia="3"
@@ -161,7 +160,8 @@
 
         <section class="seccion-admin">
             <h2>Administrar Ejercicios</h2>
-            <button id="btn-ir-agregar">
+            <button id="btn-ir-agregar"
+                style="margin:12px 0 18px 0; background:#1976d2; color:#fff; border:none; padding:8px 20px; border-radius:6px; font-size:1em; cursor:pointer;">
                 ➕ Ir a Administrar Ejercicios
             </button>
         </section>
@@ -191,6 +191,28 @@
             navigator.serviceWorker.register('sw.js');
         }
     </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     <script>
         function syncRutinasPredefinidasCheckboxes() {
@@ -223,7 +245,7 @@
                 .then(res => res.json())
                 .then(data => {
                     if (data.success) {
-                        mostrarMensaje('¡Guardado!', 'success');
+                        mostrarMensaje('¡Rutina actualizada!', 'success');
                     } else {
                         mostrarMensaje('Error al guardar', 'error');
                     }

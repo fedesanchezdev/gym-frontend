@@ -103,9 +103,8 @@ footer {
 .seccion-admin {
     background: #232936;
     border-radius: 8px;
-    padding: 0px;
-    margin: 10px 0;
-    /* margin-bottom: 20px; */
+    padding: 20px;
+    margin-bottom: 20px;
     box-shadow: var(--sombra);
 }
 
@@ -308,8 +307,6 @@ input.invalido {
     padding: 18px;
 }
 
-
-
 .ejercicio-header {
     display: flex;
     justify-content: space-between;
@@ -463,33 +460,6 @@ input.invalido {
 
 .historial-en-card button:hover {
     background: #c0392b !important;
-}
-
-/* Centrar el botón de administrar ejercicios */
-#btn-ir-agregar {
-    display: block;
-    margin: 18px auto 18px auto;
-    background: #1976d2;
-    color: #fff;
-    border: none;
-    padding: 8px 20px;
-    border-radius: 6px;
-    font-size: 1em;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-#btn-ir-agregar:hover,
-#btn-ir-agregar:focus {
-    background: #125ea7;
-}
-
-/* Indentar los details anidados en Rutinas Predefinidas */
-.seccion-rutinas-predefinidas details details {
-    margin-left: 24px;
-    /* O si prefieres padding:
-    padding-left: 24px;
-    */
 }
 
 /* ===== SERIES SN EN GRILLA ===== */
