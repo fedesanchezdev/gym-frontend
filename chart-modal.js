@@ -41,13 +41,7 @@ function mostrarGraficoHistorialEnCard(ejercicioId, card) {
             }
 
             // Ordena por fecha descendente (más reciente primero)
-            data.sort((a, b) => {
-                const [da, ma, ya] = a.fecha.split('-');
-                const [db, mb, yb] = b.fecha.split('-');
-                const dateA = new Date(`${ya}-${ma.padStart(2, '0')}-${da.padStart(2, '0')}`);
-                const dateB = new Date(`${yb}-${mb.padStart(2, '0')}-${db.padStart(2, '0')}`);
-                return dateB - dateA;
-            });
+            data.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
 
             const contenedor = crearHistorialEnCard(card, null);
 
