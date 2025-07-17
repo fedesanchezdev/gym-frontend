@@ -1,4 +1,4 @@
-const API_URL = 'https://gym-backend-oasf.onrender.com';
+const API_URL = 'https://gym-backend-production-0130.up.railway.app';
 
 // Spinner control
 function mostrarSpinner() {

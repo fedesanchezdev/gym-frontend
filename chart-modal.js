@@ -1,3 +1,6 @@
+// Usar la misma URL que en script.js
+const API_URL = 'https://gym-backend-production-0130.up.railway.app';
+
 function crearHistorialEnCard(card, mensaje) {
     // Elimina historial anterior en la card si existe
     const anterior = card.querySelector('.historial-en-card');

@@ -27,7 +27,7 @@
                 window.location.href = 'https://www.google.com';
                 return;
             }
-            const resp = await fetch('https://gym-backend-oasf.onrender.com/validar-clave', {
+            const resp = await fetch('https://gym-backend-production-0130.up.railway.app/validar-clave', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ clave: pass })
@@ -216,7 +216,7 @@
 
     <script>
         function syncRutinasPredefinidasCheckboxes() {
-            fetch('https://gym-backend-oasf.onrender.com/rutinas_predefinidas_completadas')
+            fetch('https://gym-backend-production-0130.up.railway.app/rutinas_predefinidas_completadas')
                 .then(res => res.json())
                 .then(completadas => {
                     // Asegura que completadas sea un array
@@ -237,7 +237,7 @@
                     completadas.push({ semana: Number(chk.dataset.semana), dia: Number(chk.dataset.dia) });
                 }
             });
-            fetch('https://gym-backend-oasf.onrender.com/rutinas_predefinidas_completadas', {
+            fetch('https://gym-backend-production-0130.up.railway.app/rutinas_predefinidas_completadas', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ completadas })
