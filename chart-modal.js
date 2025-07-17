@@ -1,5 +1,7 @@
-// Usar la misma URL que en script.js
-const API_URL = 'https://gym-backend-production-0130.up.railway.app';
+// Usar la misma URL que está definida en script.js
+function getApiUrl() {
+    return window.API_URL || 'https://gym-backend-production-0130.up.railway.app';
+}
 
 function crearHistorialEnCard(card, mensaje) {
     // Elimina historial anterior en la card si existe
@@ -35,7 +37,7 @@ function formatearFechaDDMMYY(fechaStr) {
 }
 
 function mostrarGraficoHistorialEnCard(ejercicioId, card) {
-    fetch(`${API_URL}/historial/${ejercicioId}`)
+    fetch(`${getApiUrl()}/historial/${ejercicioId}`)
         .then(res => res.json())
         .then(data => {
             if (!data.length) {
@@ -99,7 +101,7 @@ document.addEventListener('click', function (e) {
     if (e.target.classList.contains('eliminar-entrada-historial')) {
         const id = e.target.getAttribute('data-id');
         if (confirm('¿Seguro que quieres eliminar esta entrada del historial?')) {
-            fetch(`${API_URL}/historial/entrada/${id}`, { method: 'DELETE' })
+            fetch(`${getApiUrl()}/historial/entrada/${id}`, { method: 'DELETE' })
                 .then(res => res.json())
                 .then(result => {
                     if (result.success) {

@@ -1,4 +1,6 @@
 const API_URL = 'https://gym-backend-production-0130.up.railway.app';
+// Hacer API_URL disponible globalmente
+window.API_URL = API_URL;
 
 // Spinner control
 function mostrarSpinner() {
